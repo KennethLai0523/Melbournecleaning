@@ -1,0 +1,25 @@
+.section {
+  padding: 3.5rem 0;
+  text-align: center;
+}
+
+.inner p {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0.75rem 0 1.5rem;
+  font-size: 1.0625rem;
+}
+
+.inner h2 {
+  color: var(--color-white);
+}
+
+@media (max-width: 639px) {
+  .inner :global(.btn-group) {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .inner :global(.btn) {
+    width: 100%;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Melbourne Cleaning",
+  "short_name": "Melbourne Cleaning",
+  "description": "Residential cleaning quotes across Melbourne",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#C8102E",
+  "icons": [
+    {
+      "src": "/images/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+.wrapper {
+  position: relative;
+}
+
+.timeline {
+  display: none;
+}
+
+.content {
+  min-width: 0;
+}
+
+@media (min-width: 1100px) {
+  .wrapper {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 2rem;
+    max-width: calc(var(--max-width) + 220px);
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
+  .timeline {
+    display: block;
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+    align-self: start;
+    height: fit-content;
+    padding-top: 3rem;
+  }
+
+  .lineTrack {
+    position: absolute;
+    left: 15px;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 2px;
+    background: var(--color-border);
+    border-radius: 1px;
+  }
+
+  .lineFill {
+    width: 100%;
+    background: var(--color-primary);
+    border-radius: 1px;
+    transition: height 0.4s ease;
+  }
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  .content {
+    max-width: var(--max-width);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lineFill {
+    transition: none;
+  }
+}
+
+/* Mobile compact progress bar */
+@media (max-width: 1099px) {
+  .wrapper::before {
+    content: '';
+    display: block;
+    position: sticky;
+    top: var(--header-height);
+    z-index: 50;
+    height: 3px;
+    background: var(--color-border);
+    margin: 0;
+  }
+
+  .wrapper::after {
+    content: '';
+    display: block;
+    position: sticky;
+    top: var(--header-height);
+    z-index: 51;
+    height: 3px;
+    width: var(--journey-progress, 20%);
+    background: var(--color-primary);
+    margin-top: -3px;
+    transition: width 0.3s ease;
+  }
+}
+
+@media (max-width: 1099px) and (prefers-reduced-motion: reduce) {
+  .wrapper::after {
+    transition: none;
+  }
+}

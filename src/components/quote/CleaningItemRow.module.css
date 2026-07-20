@@ -1,0 +1,154 @@
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-white);
+  transition: background-color 0.15s ease;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.selected {
+  background: rgba(200, 16, 46, 0.03);
+}
+
+.itemCol {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.iconWrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--color-light-grey);
+  color: var(--color-text-secondary);
+}
+
+.selected .iconWrap {
+  color: var(--color-primary);
+  background: rgba(200, 16, 46, 0.08);
+}
+
+.itemText {
+  min-width: 0;
+}
+
+.name {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--color-charcoal);
+}
+
+.description {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+  margin-top: 0.125rem;
+}
+
+.unitLabelMobile {
+  display: none;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.125rem;
+}
+
+.priceCol,
+.qtyCol,
+.subtotalCol {
+  text-align: right;
+}
+
+.priceLabel {
+  display: none;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.price {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--color-charcoal);
+  white-space: nowrap;
+}
+
+.unitHint {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.125rem;
+}
+
+.subtotal {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.subtotalActive {
+  color: var(--color-primary);
+}
+
+@media (max-width: 899px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    margin-bottom: 0.625rem;
+  }
+
+  .row:last-child {
+    margin-bottom: 0;
+  }
+
+  .priceCol,
+  .qtyCol,
+  .subtotalCol {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .priceLabel {
+    display: block;
+  }
+
+  .unitHint {
+    display: none;
+  }
+
+  .unitLabelMobile {
+    display: block;
+  }
+
+  .subtotal {
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+}

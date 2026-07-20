@@ -1,0 +1,228 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--color-white);
+  transition: box-shadow 0.2s ease;
+}
+
+.headerScrolled {
+  box-shadow: var(--shadow-md);
+}
+
+.topBar {
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-size: 0.8125rem;
+  padding: 0.5rem 0;
+}
+
+.topBarInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.coverage {
+  font-weight: 500;
+}
+
+.topBarContacts {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.topLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--color-white);
+  text-decoration: none;
+  transition: opacity var(--transition);
+}
+
+.topLink:hover {
+  color: var(--color-white);
+  opacity: 0.85;
+}
+
+.hours {
+  display: none;
+  align-items: center;
+  gap: 0.375rem;
+  opacity: 0.9;
+}
+
+.topCta {
+  margin-left: 0.25rem;
+  white-space: nowrap;
+}
+
+.nav {
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.navInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--header-height);
+  gap: 1rem;
+}
+
+.menuToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--color-charcoal);
+}
+
+.menu {
+  display: none;
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.navList a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: var(--color-charcoal);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: var(--radius);
+  transition: color var(--transition), background-color var(--transition);
+}
+
+.navList a:hover,
+.navList a.active {
+  color: var(--color-primary);
+}
+
+.navList a.active {
+  font-weight: 600;
+}
+
+.navCta {
+  margin-left: 0.75rem;
+}
+
+@media (min-width: 1100px) {
+  .topBarContacts {
+    display: flex;
+  }
+
+  .hours {
+    display: inline-flex;
+  }
+
+  .menuToggle {
+    display: none;
+  }
+
+  .menu {
+    display: flex;
+    align-items: center;
+    position: static;
+    background: none;
+    padding: 0;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 1099px) {
+  .menuBackdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    border: none;
+    z-index: 1000;
+    cursor: pointer;
+  }
+
+  .menu {
+    position: fixed;
+    top: var(--sticky-header-height, 112px);
+    right: 0;
+    bottom: 0;
+    width: min(320px, 85vw);
+    background: var(--color-white);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.5rem;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    z-index: 1001;
+  }
+
+  .menuOpen {
+    display: flex;
+    transform: translateX(0);
+  }
+
+  .navList {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .navList a {
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--color-border);
+    border-radius: 0;
+  }
+
+  .navCta {
+    margin: 1.5rem 0 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .coverage {
+    font-size: 0.75rem;
+  }
+
+  .topBarContacts {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .topLink span,
+  .hours {
+    display: none;
+  }
+
+  .topLink {
+    font-size: 0;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+  }
+
+  .topCta {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.625rem;
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .menu {
+    transition: none;
+  }
+}
