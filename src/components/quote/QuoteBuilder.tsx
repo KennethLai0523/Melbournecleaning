@@ -61,8 +61,8 @@ export function QuoteBuilder({ state, onChange }: QuoteBuilderProps) {
           <span className="section-label">Step 2 · Build estimate</span>
           <h2 id="quote-builder-heading">Build your estimate</h2>
           <p>
-            Record your property details, then select each cleaning task and quantity to build
-            your item-by-item estimate.
+            Record your property details for our cleaning record, then choose which cleaning tasks
+            to include. Your estimate is based only on the cleaning items you select.
           </p>
         </div>
 

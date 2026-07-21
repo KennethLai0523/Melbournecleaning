@@ -1,11 +1,13 @@
 import { Icon } from '../ui/Icon';
+import { CleaningIcon, type CleaningIconName } from '../icons/CleaningIcon';
 import styles from './Hero.module.css';
 
-const trustItems = [
-  'Residential cleaning across Melbourne',
-  'Item-by-item estimated pricing',
-  'Flexible scheduling',
-  'Melbourne-wide service coverage',
+const trustItems: { label: string; icon: CleaningIconName }[] = [
+  { label: 'Residential cleaning across Melbourne', icon: 'home' },
+  { label: 'Item-by-item estimated pricing', icon: 'pricing' },
+  { label: '$0 booking fee', icon: 'booking-fee' },
+  { label: 'Flexible scheduling', icon: 'calendar' },
+  { label: 'Melbourne-wide service coverage', icon: 'coverage' },
 ];
 
 interface HeroProps {
@@ -38,9 +40,9 @@ export function Hero({ onBuildQuote }: HeroProps) {
           </div>
           <ul className={styles.trustStrip} aria-label="Key benefits">
             {trustItems.map((item) => (
-              <li key={item}>
-                <Icon name="check" size={14} />
-                <span>{item}</span>
+              <li key={item.label}>
+                <CleaningIcon name={item.icon} size={16} />
+                <span>{item.label}</span>
               </li>
             ))}
           </ul>

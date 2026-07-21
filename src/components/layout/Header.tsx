@@ -35,8 +35,8 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    <header className={`${styles.header} ${scrolled ? styles.headerScrolled : ''}`}>
-      <div className={styles.topBar}>
+    <>
+      <div className={`${styles.topBar} ${scrolled ? styles.topBarScrolled : ''}`}>
         <div className={`container ${styles.topBarInner}`}>
           <span className={styles.coverage}>{businessConfig.serviceCoverageText}</span>
           <div className={styles.topBarContacts}>
@@ -70,49 +70,51 @@ export function Header() {
         </div>
       </div>
 
-      <nav className={styles.nav} aria-label="Main navigation">
-        <div className={`container ${styles.navInner}`}>
-          <Logo />
+      <header className={styles.header}>
+        <nav className={styles.nav} aria-label="Main navigation">
+          <div className={`container ${styles.navInner}`}>
+            <Logo />
 
-          <button
-            type="button"
-            className={styles.menuToggle}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-expanded={menuOpen}
-            aria-controls="main-menu"
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          >
-            <Icon name={menuOpen ? 'close' : 'menu'} size={24} />
-          </button>
-
-          {menuOpen && (
             <button
               type="button"
-              className={styles.menuBackdrop}
-              aria-label="Close menu"
-              onClick={() => setMenuOpen(false)}
-            />
-          )}
+              className={styles.menuToggle}
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-expanded={menuOpen}
+              aria-controls="main-menu"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            >
+              <Icon name={menuOpen ? 'close' : 'menu'} size={24} />
+            </button>
 
-          <div id="main-menu" className={`${styles.menu} ${menuOpen ? styles.menuOpen : ''}`}>
-            <ul className={styles.navList}>
-              {mainNavigation.map((item) => (
-                <li key={item.path}>
-                  <Link
-                    to={item.path}
-                    className={location.pathname === item.path ? styles.active : ''}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <a href={quoteCtaPath} className={`btn btn--primary ${styles.navCta}`}>
-              {quoteCtaLabel}
-            </a>
+            {menuOpen && (
+              <button
+                type="button"
+                className={styles.menuBackdrop}
+                aria-label="Close menu"
+                onClick={() => setMenuOpen(false)}
+              />
+            )}
+
+            <div id="main-menu" className={`${styles.menu} ${menuOpen ? styles.menuOpen : ''}`}>
+              <ul className={styles.navList}>
+                {mainNavigation.map((item) => (
+                  <li key={item.path}>
+                    <Link
+                      to={item.path}
+                      className={location.pathname === item.path ? styles.active : ''}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <a href={quoteCtaPath} className={`btn btn--primary ${styles.navCta}`}>
+                {quoteCtaLabel}
+              </a>
+            </div>
           </div>
-        </div>
-      </nav>
-    </header>
+        </nav>
+      </header>
+    </>
   );
 }

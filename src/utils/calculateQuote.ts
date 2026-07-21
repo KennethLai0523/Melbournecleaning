@@ -6,23 +6,41 @@ function buildLineItems(selection: QuoteSelection): QuoteLineItem[] {
   const items: QuoteLineItem[] = [];
 
   for (const item of getAllCleaningItems()) {
-    const qty = selection.items[item.id] ?? 0;
-    if (qty <= 0) continue;
+    const value = selection.items[item.id] ?? 0;
 
+    if (item.pricingMode === 'toggle') {
+      if (value <= 0) continue;
+      items.push({
+        id: item.id,
+        label: item.name,
+        quantity: 1,
+        unitPrice: item.unitPrice,
+        amount: item.unitPrice,
+        unitLabel: item.unitLabel,
+        pricingMode: 'toggle',
+      });
+      continue;
+    }
+
+    if (value <= 0) continue;
     items.push({
       id: item.id,
       label: item.name,
-      quantity: qty,
+      quantity: value,
       unitPrice: item.unitPrice,
-      amount: qty * item.unitPrice,
+      amount: value * item.unitPrice,
       unitLabel: item.unitLabel,
+      pricingMode: 'quantity',
     });
   }
 
   return items;
 }
 
-/** Estimate = sum of (quantity × unit price) for selected cleaning items only */
+/**
+ * Estimated total = sum of selected cleaning items only.
+ * Property record fields do not affect pricing.
+ */
 export function calculateQuote(state: QuoteFormState): QuoteBreakdown {
   const lineItems = buildLineItems(state.quote);
   const total = lineItems.reduce((sum, i) => sum + i.amount, 0);
@@ -61,4 +79,11 @@ export function getFrequencyLabel(frequency: QuoteFormState['property']['frequen
 export function getLineItemLabel(item: QuoteLineItem): string {
   const itemDef = getCleaningItemById(item.id);
   return itemDef?.name ?? item.label;
+}
+
+export function formatLineItemSummary(item: QuoteLineItem, formatCurrency: (n: number) => string): string {
+  if (item.pricingMode === 'toggle') {
+    return formatCurrency(item.amount);
+  }
+  return `${item.quantity} × ${formatCurrency(item.unitPrice)} = ${formatCurrency(item.amount)}`;
 }

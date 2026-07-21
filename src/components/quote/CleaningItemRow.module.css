@@ -1,12 +1,13 @@
 .row {
   display: grid;
-  grid-template-columns: 1fr auto auto auto;
+  grid-template-columns: minmax(0, 1fr) 120px 150px 120px;
   gap: 0.75rem 1rem;
   align-items: center;
   padding: 0.875rem 1rem;
   border-bottom: 1px solid var(--color-border);
   background: var(--color-white);
   transition: background-color 0.15s ease;
+  min-height: 76px;
 }
 
 .row:last-child {
@@ -29,9 +30,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   background: var(--color-light-grey);
   color: var(--color-text-secondary);
 }
@@ -68,12 +69,29 @@
 }
 
 .priceCol,
-.qtyCol,
+.controlCol,
 .subtotalCol {
-  text-align: right;
+  min-width: 0;
 }
 
-.priceLabel {
+.priceCol {
+  text-align: center;
+}
+
+.controlCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.subtotalCol {
+  text-align: right;
+  /* Always reserve space so controls never shift */
+  min-width: 120px;
+}
+
+.colLabel {
   display: none;
   font-size: 0.6875rem;
   text-transform: uppercase;
@@ -83,6 +101,7 @@
 }
 
 .price {
+  display: block;
   font-weight: 600;
   font-size: 0.875rem;
   color: var(--color-charcoal);
@@ -94,43 +113,133 @@
   font-size: 0.6875rem;
   color: var(--color-text-secondary);
   margin-top: 0.125rem;
+  white-space: nowrap;
 }
 
 .subtotal {
+  display: block;
   font-weight: 700;
   font-size: 0.9375rem;
   color: var(--color-text-secondary);
   white-space: nowrap;
+  min-height: 1.4em;
 }
 
 .subtotalActive {
   color: var(--color-primary);
 }
 
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  min-height: 40px;
+}
+
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.toggleTrack {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--color-border);
+  transition: background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s ease;
+}
+
+.toggle input:checked + .toggleTrack {
+  background: var(--color-primary);
+}
+
+.toggle input:checked + .toggleTrack .toggleThumb {
+  transform: translateX(18px);
+}
+
+.toggle input:focus-visible + .toggleTrack {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.toggleText {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  min-width: 1.75rem;
+}
+
+.toggle input:checked ~ .toggleText {
+  color: var(--color-primary);
+}
+
 @media (max-width: 899px) {
   .row {
-    grid-template-columns: 1fr;
-    gap: 0.625rem;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'item item'
+      'price control'
+      'subtotal subtotal';
+    gap: 0.75rem;
     padding: 1rem;
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     margin-bottom: 0.625rem;
+    min-height: 0;
   }
 
   .row:last-child {
     margin-bottom: 0;
   }
 
-  .priceCol,
-  .qtyCol,
+  .itemCol {
+    grid-area: item;
+  }
+
+  .priceCol {
+    grid-area: price;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .controlCol {
+    grid-area: control;
+    align-items: flex-end;
+  }
+
   .subtotalCol {
+    grid-area: subtotal;
     display: flex;
     align-items: center;
     justify-content: space-between;
     text-align: left;
+    min-width: 0;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--color-border);
   }
 
-  .priceLabel {
+  .colLabel {
     display: block;
   }
 
@@ -148,7 +257,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .row {
+  .row,
+  .toggleTrack,
+  .toggleThumb {
     transition: none;
   }
 }

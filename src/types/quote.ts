@@ -8,14 +8,17 @@ export interface PropertyDetails {
   bedrooms: number;
   bathrooms: number;
   toilets: number;
-  balconies: number;
-  garageSpaces: number;
+  livingRooms: number;
+  kitchens: number;
   frequency: ServiceFrequency;
 }
 
-/** Item-by-item cleaning selections — quantities × unit prices */
+/**
+ * Cleaning selections.
+ * Quantity items: value = quantity (0 = off)
+ * Toggle items: value = 1 selected, 0 or absent = not selected
+ */
 export interface QuoteSelection {
-  /** Cleaning item id → quantity (0 = not selected) */
   items: Record<string, number>;
   notes: string;
 }
@@ -31,22 +34,24 @@ export interface QuoteLineItem {
   quantity: number;
   unitPrice: number;
   amount: number;
-  unitLabel: string;
+  unitLabel?: string;
+  pricingMode: 'quantity' | 'toggle';
 }
 
 export interface QuoteBreakdown {
   items: QuoteLineItem[];
   total: number;
+  /** True when no cleaning items are selected */
   isEmpty: boolean;
 }
 
 export const defaultPropertyDetails: PropertyDetails = {
-  propertyType: 'house',
+  propertyType: '',
   bedrooms: 2,
   bathrooms: 1,
   toilets: 1,
-  balconies: 0,
-  garageSpaces: 0,
+  livingRooms: 1,
+  kitchens: 1,
   frequency: 'one-time',
 };
 

@@ -31,7 +31,7 @@ export function PropertyTypeSelector({ selectedId, onSelect }: PropertyTypeSelec
                 role="radio"
                 aria-checked={isSelected}
                 className={`${styles.card} ${isSelected ? styles.selected : ''}`}
-                onClick={() => onSelect(type.id)}
+                onClick={() => onSelect(isSelected ? '' : type.id)}
               >
                 <span className={styles.iconWrap} aria-hidden="true">
                   <CleaningIcon name={type.icon} size={28} />

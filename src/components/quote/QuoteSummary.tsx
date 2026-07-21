@@ -1,7 +1,11 @@
 import { businessConfig } from '../../config/businessConfig';
 import { pricingDisclaimer, getPropertyTypeById } from '../../data/pricing';
 import type { QuoteBreakdown, QuoteFormState } from '../../types/quote';
-import { getFrequencyLabel, getLineItemLabel } from '../../utils/calculateQuote';
+import {
+  formatLineItemSummary,
+  getFrequencyLabel,
+  getLineItemLabel,
+} from '../../utils/calculateQuote';
 import { buildQuoteWhatsAppUrl, canSendWhatsAppQuote } from '../../utils/buildWhatsAppQuote';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { Icon } from '../ui/Icon';
@@ -46,12 +50,12 @@ export function QuoteSummary({ state, breakdown, onReset, summaryId = 'quote-sum
             <dd>{state.property.toilets}</dd>
           </div>
           <div className={styles.recordRow}>
-            <dt>Balconies</dt>
-            <dd>{state.property.balconies}</dd>
+            <dt>Living rooms</dt>
+            <dd>{state.property.livingRooms}</dd>
           </div>
           <div className={styles.recordRow}>
-            <dt>Garage spaces</dt>
-            <dd>{state.property.garageSpaces}</dd>
+            <dt>Kitchens</dt>
+            <dd>{state.property.kitchens}</dd>
           </div>
           <div className={styles.recordRow}>
             <dt>Frequency</dt>
@@ -69,9 +73,7 @@ export function QuoteSummary({ state, breakdown, onReset, summaryId = 'quote-sum
             {breakdown.items.map((item) => (
               <div key={item.id} className={styles.linePair}>
                 <dt>{getLineItemLabel(item)}</dt>
-                <dd>
-                  {item.quantity} × {formatCurrency(item.unitPrice)} = {formatCurrency(item.amount)}
-                </dd>
+                <dd>{formatLineItemSummary(item, formatCurrency)}</dd>
               </div>
             ))}
           </dl>

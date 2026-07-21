@@ -1,6 +1,6 @@
 import { getPropertyTypeById } from '../data/pricing';
 import type { QuoteBreakdown, QuoteFormState } from '../types/quote';
-import { getFrequencyLabel, getLineItemLabel } from './calculateQuote';
+import { formatLineItemSummary, getFrequencyLabel, getLineItemLabel } from './calculateQuote';
 import { formatCurrency } from './formatCurrency';
 import { buildWhatsAppUrl } from './whatsapp';
 
@@ -14,12 +14,12 @@ export function buildQuoteWhatsAppMessage(
     'Hi Melbourne Cleaning, I would like to request a residential cleaning quote.',
     '',
     'Property information:',
-    `Property type: ${propertyType?.name ?? state.property.propertyType}`,
+    `Property type: ${propertyType?.name ?? (state.property.propertyType || 'Not selected')}`,
     `Bedrooms: ${state.property.bedrooms}`,
     `Bathrooms: ${state.property.bathrooms}`,
     `Toilets: ${state.property.toilets}`,
-    `Balconies: ${state.property.balconies}`,
-    `Garage spaces: ${state.property.garageSpaces}`,
+    `Living rooms: ${state.property.livingRooms}`,
+    `Kitchens: ${state.property.kitchens}`,
     `Frequency: ${getFrequencyLabel(state.property.frequency)}`,
   ];
 
@@ -29,7 +29,7 @@ export function buildQuoteWhatsAppMessage(
     lines.push('', 'Cleaning details:');
     for (const item of breakdown.items) {
       lines.push(
-        `- ${getLineItemLabel(item)}: ${item.quantity} × ${formatCurrency(item.unitPrice)} = ${formatCurrency(item.amount)}`,
+        `- ${getLineItemLabel(item)}: ${formatLineItemSummary(item, formatCurrency)}`,
       );
     }
     lines.push('', `Estimated total: ${formatCurrency(breakdown.total)}`);

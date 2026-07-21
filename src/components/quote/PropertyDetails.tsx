@@ -21,8 +21,8 @@ const quantityFields: FieldConfig[] = [
   { key: 'bedrooms', label: 'Bedrooms', icon: 'bedroom', max: 20 },
   { key: 'bathrooms', label: 'Bathrooms', icon: 'bathroom', max: 20 },
   { key: 'toilets', label: 'Toilets', icon: 'toilet', max: 20 },
-  { key: 'balconies', label: 'Balconies', icon: 'balcony', max: 20 },
-  { key: 'garageSpaces', label: 'Garage spaces', icon: 'garage', max: 10 },
+  { key: 'livingRooms', label: 'Living rooms', icon: 'living-room', max: 20 },
+  { key: 'kitchens', label: 'Kitchens', icon: 'kitchen', max: 10 },
 ];
 
 export function PropertyDetails({ details, onChange }: PropertyDetailsProps) {

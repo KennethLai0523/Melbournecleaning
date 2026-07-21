@@ -11,9 +11,15 @@ interface CleaningItemRowProps {
 }
 
 export function CleaningItemRow({ item, quantity, onQuantityChange }: CleaningItemRowProps) {
-  const isSelected = quantity > 0;
-  const subtotal = quantity * item.unitPrice;
+  const isQuantity = item.pricingMode === 'quantity';
+  const isSelected = isQuantity ? quantity > 0 : quantity > 0;
+  const subtotal = isQuantity
+    ? quantity * item.unitPrice
+    : isSelected
+      ? item.unitPrice
+      : 0;
   const maxQty = item.maxQuantity ?? 50;
+  const unitLabel = item.unitLabel ?? 'per job';
 
   return (
     <div
@@ -27,27 +33,47 @@ export function CleaningItemRow({ item, quantity, onQuantityChange }: CleaningIt
         <div className={styles.itemText}>
           <span className={styles.name}>{item.name}</span>
           <span className={styles.description}>{item.description}</span>
-          <span className={styles.unitLabelMobile}>{item.unitLabel}</span>
+          <span className={styles.unitLabelMobile}>
+            {isQuantity ? unitLabel : formatCurrency(item.unitPrice)}
+          </span>
         </div>
       </div>
+
       <div className={styles.priceCol} role="cell">
-        <span className={styles.priceLabel}>Unit price</span>
+        <span className={styles.colLabel}>Unit price</span>
         <span className={styles.price}>{formatCurrency(item.unitPrice)}</span>
-        <span className={styles.unitHint}>{item.unitLabel}</span>
+        <span className={styles.unitHint}>{isQuantity ? unitLabel : 'fixed'}</span>
       </div>
-      <div className={styles.qtyCol} role="cell">
-        <span className={styles.priceLabel}>Quantity</span>
-        <QuantitySelector
-          id={`qty-${item.id}`}
-          value={quantity}
-          min={0}
-          max={maxQty}
-          onChange={onQuantityChange}
-          label={item.name}
-        />
+
+      <div className={styles.controlCol} role="cell">
+        <span className={styles.colLabel}>{isQuantity ? 'Quantity' : 'Include'}</span>
+        {isQuantity ? (
+          <QuantitySelector
+            id={`qty-${item.id}`}
+            value={quantity}
+            min={0}
+            max={maxQty}
+            onChange={onQuantityChange}
+            label={item.name}
+          />
+        ) : (
+          <label className={styles.toggle}>
+            <input
+              type="checkbox"
+              checked={isSelected}
+              onChange={(e) => onQuantityChange(e.target.checked ? 1 : 0)}
+              aria-label={`Include ${item.name}`}
+            />
+            <span className={styles.toggleTrack} aria-hidden="true">
+              <span className={styles.toggleThumb} />
+            </span>
+            <span className={styles.toggleText}>{isSelected ? 'Yes' : 'No'}</span>
+          </label>
+        )}
       </div>
+
       <div className={styles.subtotalCol} role="cell">
-        <span className={styles.priceLabel}>Subtotal</span>
+        <span className={styles.colLabel}>Subtotal</span>
         <span className={`${styles.subtotal} ${isSelected ? styles.subtotalActive : ''}`}>
           {isSelected ? formatCurrency(subtotal) : '—'}
         </span>

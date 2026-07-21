@@ -35,7 +35,7 @@ export function CleaningDetails({ items, onItemChange }: CleaningDetailsProps) {
         <div className={styles.tableHead} role="row">
           <span role="columnheader">Item</span>
           <span role="columnheader">Unit price</span>
-          <span role="columnheader">Qty</span>
+          <span role="columnheader">Select</span>
           <span role="columnheader">Subtotal</span>
         </div>
         {defaultItems.map(renderRow)}

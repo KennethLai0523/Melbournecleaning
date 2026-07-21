@@ -12,7 +12,7 @@
   --max-width: 1200px;
   --header-height: 72px;
   --top-bar-height: 40px;
-  --sticky-header-height: calc(var(--top-bar-height) + var(--header-height));
+  --sticky-header-height: var(--top-bar-height);
   --mobile-bar-height: 60px;
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -32,11 +32,11 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: var(--sticky-header-height, 112px);
+  scroll-padding-top: var(--sticky-header-height, 40px);
 }
 
 [id] {
-  scroll-margin-top: var(--sticky-header-height, 112px);
+  scroll-margin-top: var(--sticky-header-height, 40px);
 }
 
 body {
