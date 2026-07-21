@@ -8,7 +8,7 @@ export function AboutSection() {
         <div className="grid-2" style={{ alignItems: 'center' }}>
           <div>
             <span className="section-label">About Us</span>
-            <h2 id="about-preview-heading">Melbourne Premier Cleaning</h2>
+            <h2 id="about-preview-heading">Melbourne Cleaning Group</h2>
             <p>{aboutContent.introduction}</p>
             <p style={{ color: 'var(--color-text-secondary)' }}>{aboutContent.mission}</p>
             <Link to="/about" className="btn btn--primary" style={{ marginTop: '0.5rem' }}>
@@ -18,7 +18,7 @@ export function AboutSection() {
           <div>
             <img
               src="/images/about-team.jpg"
-              alt="Melbourne Premier Cleaning team"
+              alt="Melbourne Cleaning Group team"
               style={{ borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)' }}
               width={560}
               height={400}

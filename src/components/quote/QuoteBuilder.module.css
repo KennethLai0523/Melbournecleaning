@@ -1,7 +1,7 @@
 .section {
   padding: 3rem 0 5rem;
   background: var(--color-white);
-  scroll-margin-top: var(--sticky-header-height, 40px);
+  scroll-margin-top: var(--sticky-header-height, 112px);
 }
 
 .header {

@@ -17,7 +17,7 @@ export default function AboutPage() {
         ]}
       />
       <PageBanner
-        title="About Melbourne Premier Cleaning"
+        title="About Melbourne Cleaning Group"
         description="Residential cleaning services with dependable communication across Melbourne."
         breadcrumbs={[
           { name: 'Home', path: '/' },
@@ -35,7 +35,7 @@ export default function AboutPage() {
             <div>
               <img
                 src="/images/about-team.jpg"
-                alt="Melbourne Premier Cleaning"
+                alt="Melbourne Cleaning Group"
                 style={{ borderRadius: 'var(--radius)', boxShadow: 'var(--shadow-md)' }}
                 width={560}
                 height={400}

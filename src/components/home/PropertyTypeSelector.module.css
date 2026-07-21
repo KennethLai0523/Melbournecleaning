@@ -1,6 +1,6 @@
 .section {
   padding: 3rem 0;
-  scroll-margin-top: var(--sticky-header-height, 40px);
+  scroll-margin-top: var(--sticky-header-height, 112px);
 }
 
 .header {

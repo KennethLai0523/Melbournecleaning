@@ -44,7 +44,7 @@ export function HeroSection() {
         </div>
         <div className={styles.imageWrap}>
           <img
-            src="/images/hero-cleaning.jpg"
+            src="/images/hero.jpeg?v=3"
             alt="Professional cleaners working in a Melbourne home"
             className={styles.image}
             width={600}

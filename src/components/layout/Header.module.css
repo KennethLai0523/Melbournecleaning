@@ -1,16 +1,20 @@
-.topBar {
+.stickyShell {
   position: sticky;
   top: 0;
   z-index: 1000;
+  background: var(--color-white);
+  transition: box-shadow 0.2s ease;
+}
+
+.stickyShellScrolled {
+  box-shadow: var(--shadow-md);
+}
+
+.topBar {
   background: var(--color-primary);
   color: var(--color-white);
   font-size: 0.8125rem;
   padding: 0.5rem 0;
-  transition: box-shadow 0.2s ease;
-}
-
-.topBarScrolled {
-  box-shadow: var(--shadow-md);
 }
 
 .topBarInner {
@@ -56,6 +60,14 @@
 .topCta {
   margin-left: 0.25rem;
   white-space: nowrap;
+}
+
+.topBar .topCta {
+  color: var(--color-white);
+}
+
+.topBar .topLink {
+  color: var(--color-white);
 }
 
 .header {
@@ -153,7 +165,7 @@
 
   .menu {
     position: fixed;
-    top: var(--top-bar-height, 40px);
+    top: var(--sticky-header-height, 112px);
     right: 0;
     bottom: 0;
     width: min(320px, 85vw);
@@ -198,19 +210,17 @@
 
   .topBarContacts {
     display: flex;
+    align-items: center;
     gap: 0.5rem;
   }
 
-  .topLink span,
   .hours {
     display: none;
   }
 
   .topLink {
-    font-size: 0;
-    width: 32px;
-    height: 32px;
-    justify-content: center;
+    font-size: 0.75rem;
+    white-space: nowrap;
   }
 
   .topCta {
@@ -221,7 +231,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .topBar,
+  .stickyShell,
   .menu {
     transition: none;
   }

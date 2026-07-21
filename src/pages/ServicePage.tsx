@@ -6,6 +6,7 @@ import { FAQAccordion } from '../components/ui/FAQAccordion';
 import { CTASection } from '../sections/CTASection';
 import { getServiceBySlug, getRelatedServices } from '../data/services';
 import { seoConfig } from '../config/seoConfig';
+import { businessConfig } from '../config/businessConfig';
 
 const slugToSeoKey: Record<string, keyof typeof seoConfig> = {
   'residential-cleaning': 'residentialCleaning',
@@ -51,7 +52,7 @@ export default function ServicePage({ slug: slugProp }: ServicePageProps) {
     ? seoConfig[seoKey]
     : {
         path: `/${slug}`,
-        title: `${service.title} | Melbourne Premier Cleaning`,
+        title: `${service.title} | ${businessConfig.name}`,
         description: service.shortDescription,
       };
 

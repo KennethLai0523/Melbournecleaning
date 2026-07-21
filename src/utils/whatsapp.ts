@@ -10,7 +10,7 @@ export function getDefaultWhatsAppUrl(): string {
 }
 
 export function buildSuburbCheckWhatsAppUrl(suburb: string): string {
-  const message = `Hi Melbourne Premier Cleaning, do you provide cleaning services in ${suburb}?`;
+  const message = `Hi ${businessConfig.name}, do you provide cleaning services in ${suburb}?`;
   return buildWhatsAppUrl(message);
 }
 
@@ -26,7 +26,7 @@ export interface QuickEnquiryData {
 
 export function buildQuickEnquiryWhatsAppMessage(data: QuickEnquiryData): string {
   const lines = [
-    'Hi Melbourne Premier Cleaning, I would like to request a quote.',
+    `Hi ${businessConfig.name}, I would like to request a quote.`,
     '',
     `Name: ${data.name}`,
     `Phone: ${data.phone}`,
@@ -59,7 +59,7 @@ export interface DetailedQuoteData {
 
 export function buildDetailedQuoteWhatsAppMessage(data: DetailedQuoteData): string {
   const lines = [
-    'Hi Melbourne Premier Cleaning, I would like to request a detailed cleaning quote.',
+    `Hi ${businessConfig.name}, I would like to request a detailed cleaning quote.`,
     '',
     `Name: ${data.name}`,
     `Phone: ${data.phone}`,
@@ -90,7 +90,7 @@ export interface ContactFormData {
 
 export function buildContactWhatsAppMessage(data: ContactFormData): string {
   const lines = [
-    `Hi Melbourne Premier Cleaning, I have an enquiry.`,
+    `Hi ${businessConfig.name}, I have an enquiry.`,
     '',
     `Name: ${data.name}`,
     `Phone: ${data.phone}`,

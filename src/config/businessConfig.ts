@@ -1,36 +1,44 @@
 /**
- * Central business configuration — edit all contact and branding details here.
- * Items marked TEMPORARY must be replaced with verified information before launch.
+ * Central contact and branding configuration.
+ * Edit contact details here only — do not hardcode them in components.
  */
 
+export const CONTACT_DETAILS = {
+  businessName: 'Melbourne Cleaning Group',
+  email: 'enquiry.melbourecleaning@gmail.com',
+  phoneDisplay: '0483 744 926',
+  phoneInternational: '+61483744926',
+  phoneInternationalDisplay: '+61 483 744 926',
+  whatsappNumber: '61483744926',
+  whatsappUrl: 'https://wa.me/61483744926',
+} as const;
+
 export const businessConfig = {
-  name: 'Melbourne Premier Cleaning',
+  name: CONTACT_DETAILS.businessName,
   tagline: 'Professional Cleaning Services You Can Rely On',
   heroSubtitle:
     'Reliable residential cleaning services across Melbourne, delivered with clear communication, flexible scheduling and careful attention to detail.',
 
-  // Phone & WhatsApp — verified
   phone: {
-    display: '+61 480 636 863',
-    tel: 'tel:+61480636863',
-    raw: '+61480636863',
+    display: CONTACT_DETAILS.phoneDisplay,
+    tel: `tel:${CONTACT_DETAILS.phoneInternational}`,
+    raw: CONTACT_DETAILS.phoneInternational,
+    internationalDisplay: CONTACT_DETAILS.phoneInternationalDisplay,
   },
 
   whatsapp: {
-    number: '61480636863',
-    baseUrl: 'https://wa.me/61480636863',
+    number: CONTACT_DETAILS.whatsappNumber,
+    baseUrl: CONTACT_DETAILS.whatsappUrl,
     defaultMessage:
-      'Hi Melbourne Premier Cleaning, I would like to request a cleaning quote.',
+      'Hi Melbourne Cleaning Group, I would like to request a cleaning quote.',
   },
 
-  // TEMPORARY — replace with verified business email before launch
   email: {
-    address: 'hello@melbournepremiercleaning.com.au',
-    /** @temporary Not yet verified */
-    isTemporary: true,
+    address: CONTACT_DETAILS.email,
+    mailto: `mailto:${CONTACT_DETAILS.email}`,
+    isTemporary: false,
   },
 
-  // TEMPORARY — replace with verified street address before launch
   address: {
     city: 'Melbourne',
     state: 'Victoria',
@@ -39,20 +47,18 @@ export const businessConfig = {
   serviceCoverageText: 'Serving Melbourne and surrounding suburbs',
 
   openingHours: {
-    weekdays: 'Monday – Friday: 7:00 AM – 6:00 PM',
-    saturday: 'Saturday: 8:00 AM – 4:00 PM',
-    sunday: 'Sunday: By appointment',
-    display: 'Mon–Fri 7am–6pm | Sat 8am–4pm | Sun by appointment',
+    weekdays: 'Monday – Friday: 8:00 AM – 8:00 PM',
+    saturday: 'Saturday: 8:00 AM – 6:00 PM',
+    sunday: 'Sunday: 8:00 AM – 6:00 PM',
+    display: 'Mon–Fri 8am–8pm | Sat & Sun 8am–6pm',
   },
 
-  // Social media — leave empty until verified links are available
   social: {
     facebook: '',
     instagram: '',
     linkedin: '',
   },
 
-  // Trust claims — disabled by default; enable only after verification
   trustClaims: {
     fullyInsured: false,
     policeChecked: false,
@@ -78,7 +84,8 @@ export const businessConfig = {
     secondaryText: '#5F6368',
   },
 
-  siteUrl: 'https://www.melbournepremiercleaning.com.au',
+  siteUrl: 'https://www.melbournecleaning.co',
 } as const;
 
 export type BusinessConfig = typeof businessConfig;
+export type ContactDetails = typeof CONTACT_DETAILS;

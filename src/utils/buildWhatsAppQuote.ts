@@ -1,4 +1,5 @@
 import { getPropertyTypeById } from '../data/pricing';
+import { businessConfig } from '../config/businessConfig';
 import type { QuoteBreakdown, QuoteFormState } from '../types/quote';
 import { formatLineItemSummary, getFrequencyLabel, getLineItemLabel } from './calculateQuote';
 import { formatCurrency } from './formatCurrency';
@@ -11,7 +12,7 @@ export function buildQuoteWhatsAppMessage(
   const propertyType = getPropertyTypeById(state.property.propertyType);
 
   const lines: string[] = [
-    'Hi Melbourne Cleaning, I would like to request a residential cleaning quote.',
+    `Hi ${businessConfig.name}, I would like to request a cleaning quote.`,
     '',
     'Property information:',
     `Property type: ${propertyType?.name ?? (state.property.propertyType || 'Not selected')}`,

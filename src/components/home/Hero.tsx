@@ -1,5 +1,6 @@
 import { Icon } from '../ui/Icon';
 import { CleaningIcon, type CleaningIconName } from '../icons/CleaningIcon';
+import { getDefaultWhatsAppUrl } from '../../utils/whatsapp';
 import styles from './Hero.module.css';
 
 const trustItems: { label: string; icon: CleaningIconName }[] = [
@@ -29,7 +30,7 @@ export function Hero({ onBuildQuote }: HeroProps) {
               Build Your Quote
             </button>
             <a
-              href="https://wa.me/61480636863?text=Hi%20Melbourne%20Cleaning%2C%20I%20would%20like%20to%20request%20a%20cleaning%20quote."
+              href={getDefaultWhatsAppUrl()}
               className="btn btn--whatsapp"
               target="_blank"
               rel="noopener noreferrer"
@@ -49,11 +50,11 @@ export function Hero({ onBuildQuote }: HeroProps) {
         </div>
         <div className={styles.imageWrap}>
           <img
-            src="/images/hero-cleaning.jpg"
+            src="/images/hero.jpeg?v=3"
             alt="Professional residential cleaning in Melbourne"
             className={styles.image}
-            width={580}
-            height={420}
+            width={200}
+            height={180}
             fetchPriority="high"
           />
         </div>

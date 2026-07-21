@@ -1,14 +1,14 @@
 {
-  "name": "Melbourne Cleaning",
-  "short_name": "Melbourne Cleaning",
-  "description": "Residential cleaning quotes across Melbourne",
+  "name": "Melbourne Cleaning Group",
+  "short_name": "Melbourne Cleaning Group",
+  "description": "Professional residential cleaning services across Melbourne",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FFFFFF",
   "theme_color": "#C8102E",
   "icons": [
     {
-      "src": "/images/icon.png",
+      "src": "/images/icon.png?v=3",
       "sizes": "512x512",
       "type": "image/png"
     }

@@ -35,24 +35,11 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    <>
-      <div className={`${styles.topBar} ${scrolled ? styles.topBarScrolled : ''}`}>
+    <div className={`${styles.stickyShell} ${scrolled ? styles.stickyShellScrolled : ''}`}>
+      <div className={styles.topBar}>
         <div className={`container ${styles.topBarInner}`}>
           <span className={styles.coverage}>{businessConfig.serviceCoverageText}</span>
           <div className={styles.topBarContacts}>
-            <a href={businessConfig.phone.tel} className={styles.topLink}>
-              <Icon name="phone" size={14} />
-              {businessConfig.phone.display}
-            </a>
-            <a
-              href={businessConfig.whatsapp.baseUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.topLink}
-            >
-              <Icon name="whatsapp" size={14} />
-              Chat on WhatsApp
-            </a>
             <span className={styles.hours}>
               <Icon name="clock" size={14} />
               {businessConfig.openingHours.display}
@@ -61,10 +48,14 @@ export function Header() {
               href={topBarWhatsAppUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={`btn btn--white btn--sm ${styles.topCta}`}
+              className={`btn btn--whatsapp btn--sm ${styles.topCta}`}
             >
               <Icon name="whatsapp" size={14} />
               WhatsApp Us
+            </a>
+            <a href={businessConfig.phone.tel} className={styles.topLink}>
+              <Icon name="phone" size={14} />
+              {businessConfig.phone.display}
             </a>
           </div>
         </div>
@@ -115,6 +106,6 @@ export function Header() {
           </div>
         </nav>
       </header>
-    </>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
-# Melbourne Premier Cleaning — Static Marketing Website
+# Melbourne Cleaning Group — Static Marketing Website
 
-Professional static marketing website for **Melbourne Premier Cleaning**, a Melbourne-based residential and commercial cleaning service.
+Professional static marketing website for **Melbourne Cleaning Group**, a Melbourne-based residential and commercial cleaning service.
 
 Built with React, Vite, TypeScript, and React Router. No backend, database, or authentication — enquiries are sent via WhatsApp, email, or clipboard copy.
 
@@ -68,7 +68,7 @@ public/
 
 In `src/config/businessConfig.ts`:
 
-- **Email** — marked as temporary (`hello@melbournepremiercleaning.com.au`)
+- **Email** — `enquiry.melbourecleaning@gmail.com` (configured in `src/config/businessConfig.ts`)
 - **Address** — city/state only until verified
 - **Trust claims** — disabled by default (insurance, ratings, etc.)
 - **Testimonials** — placeholder reviews in `src/data/testimonials.ts`

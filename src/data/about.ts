@@ -1,6 +1,6 @@
-export const aboutContent = {
+﻿export const aboutContent = {
   introduction:
-    'Melbourne Premier Cleaning provides residential cleaning services across Melbourne. Our focus is on dependable communication, flexible cleaning arrangements and careful service tailored to each home.',
+    'Melbourne Cleaning Group provides residential cleaning services across Melbourne. Our focus is on dependable communication, flexible cleaning arrangements and careful service tailored to each home.',
 
   mission:
     'To deliver reliable residential cleaning supported by clear communication, straightforward quotations and flexible scheduling that respects our clients\' time and property.',

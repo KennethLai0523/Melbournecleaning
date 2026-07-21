@@ -22,6 +22,8 @@ export function SEO({ seo, breadcrumbs, type = 'website', serviceName }: SEOProp
     url: businessConfig.siteUrl,
     telephone: businessConfig.phone.raw,
     email: businessConfig.email.address,
+    image: `${businessConfig.siteUrl}/images/icon.png`,
+    logo: `${businessConfig.siteUrl}/images/icon.png`,
     areaServed: {
       '@type': 'City',
       name: 'Melbourne',
@@ -34,14 +36,20 @@ export function SEO({ seo, breadcrumbs, type = 'website', serviceName }: SEOProp
       {
         '@type': 'OpeningHoursSpecification',
         dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-        opens: '07:00',
-        closes: '18:00',
+        opens: '08:00',
+        closes: '20:00',
       },
       {
         '@type': 'OpeningHoursSpecification',
         dayOfWeek: 'Saturday',
         opens: '08:00',
-        closes: '16:00',
+        closes: '18:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Sunday',
+        opens: '08:00',
+        closes: '18:00',
       },
     ],
     priceRange: '$$',

@@ -8,7 +8,7 @@ export function WhyChooseUs() {
       <div className="container">
         <div className="section-header">
           <span className="section-label">Why Choose Us</span>
-          <h2 id="why-choose-heading">The Melbourne Premier Cleaning Difference</h2>
+          <h2 id="why-choose-heading">The Melbourne Cleaning Group Difference</h2>
           <p>Reliable cleaning supported by clear communication and flexible service options.</p>
         </div>
         <div className="grid-4">

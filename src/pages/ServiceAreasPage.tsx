@@ -22,7 +22,7 @@ export default function ServiceAreasPage() {
       />
       <PageBanner
         title="Service Areas"
-        description="Melbourne Premier Cleaning services Melbourne CBD, inner city and surrounding suburbs."
+        description="Melbourne Cleaning Group services Melbourne CBD, inner city and surrounding suburbs."
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Service Areas', path: '/service-areas' },

@@ -1,3 +1,5 @@
+import { businessConfig } from './businessConfig';
+
 export interface NavItem {
   label: string;
   path: string;
@@ -6,7 +8,6 @@ export interface NavItem {
 export const mainNavigation: NavItem[] = [
   { label: 'Home', path: '/' },
   { label: 'Services', path: '/services' },
-  { label: 'Residential', path: '/residential-cleaning' },
   { label: 'Service Areas', path: '/service-areas' },
   { label: 'About', path: '/about' },
   { label: 'Contact', path: '/contact' },
@@ -15,9 +16,8 @@ export const mainNavigation: NavItem[] = [
 export const quoteCtaPath = '/#quote-builder';
 export const quoteCtaLabel = 'Build Your Quote';
 
-/** Top red-bar WhatsApp CTA — pre-encoded message */
-export const topBarWhatsAppUrl =
-  'https://wa.me/61480636863?text=Hi%20Melbourne%20Cleaning%2C%20I%20would%20like%20to%20request%20a%20cleaning%20quote.';
+/** Top red-bar WhatsApp CTA — uses central WhatsApp config */
+export const topBarWhatsAppUrl = `${businessConfig.whatsapp.baseUrl}?text=${encodeURIComponent(businessConfig.whatsapp.defaultMessage)}`;
 
 export const footerResidentialLinks: NavItem[] = [
   { label: 'Residential Cleaning', path: '/residential-cleaning' },

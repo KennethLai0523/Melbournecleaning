@@ -38,7 +38,7 @@ export function Footer() {
                 <Icon name="whatsapp" size={16} />
                 WhatsApp
               </a>
-              <a href={`mailto:${businessConfig.email.address}`} className={styles.contactLink}>
+              <a href={businessConfig.email.mailto} className={styles.contactLink}>
                 <Icon name="mail" size={16} />
                 {businessConfig.email.address}
               </a>
