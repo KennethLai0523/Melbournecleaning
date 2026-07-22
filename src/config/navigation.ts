@@ -8,7 +8,7 @@ export interface NavItem {
 export const mainNavigation: NavItem[] = [
   { label: 'Home', path: '/' },
   { label: 'Services', path: '/services' },
-  { label: 'Service Areas', path: '/service-areas' },
+  { label: 'Area We Clean', path: '/service-areas' },
   { label: 'About', path: '/about' },
   { label: 'Contact', path: '/contact' },
 ];
@@ -25,13 +25,11 @@ export const footerResidentialLinks: NavItem[] = [
   { label: 'End of Lease Cleaning', path: '/end-of-lease-cleaning' },
   { label: 'Move-In / Move-Out Cleaning', path: '/move-in-move-out-cleaning' },
   { label: 'Airbnb Cleaning', path: '/airbnb-cleaning' },
-  { label: 'Carpet Cleaning', path: '/carpet-cleaning' },
-  { label: 'Window Cleaning', path: '/window-cleaning' },
 ];
 
 export const footerPopularServices: NavItem[] = [
   { label: 'All Services', path: '/services' },
-  { label: 'Service Areas', path: '/service-areas' },
+  { label: 'Area We Clean', path: '/service-areas' },
   { label: 'Build Your Quote', path: '/#journey-choose-service' },
   { label: 'Contact', path: '/contact' },
 ];

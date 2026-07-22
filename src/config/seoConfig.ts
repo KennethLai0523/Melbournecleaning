@@ -23,7 +23,7 @@ export const seoConfig: Record<string, PageSEO> = {
     path: '/services',
     title: `Residential Cleaning Services Melbourne | ${brand}`,
     description:
-      'Explore our residential cleaning services including house cleaning, end of lease cleaning, deep cleaning, carpet cleaning and more.',
+      'Explore our residential cleaning services including house cleaning, end of lease cleaning, deep cleaning and more.',
     ogImage: defaultOgImage,
   },
   residentialCleaning: {
@@ -105,7 +105,7 @@ export const seoConfig: Record<string, PageSEO> = {
   },
   serviceAreas: {
     path: '/service-areas',
-    title: `Service Areas Melbourne | ${brand}`,
+    title: `Area We Clean Melbourne | ${brand}`,
     description:
       `${brand} services Melbourne CBD, inner city and surrounding suburbs. Check availability for your area.`,
     ogImage: defaultOgImage,

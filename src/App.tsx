@@ -16,11 +16,11 @@ const residentialServiceRoutes = [
   'residential-cleaning',
   'end-of-lease-cleaning',
   'deep-cleaning',
-  'carpet-cleaning',
-  'window-cleaning',
   'airbnb-cleaning',
   'move-in-move-out-cleaning',
 ];
+
+const removedServiceRedirects = ['carpet-cleaning', 'window-cleaning'] as const;
 
 function App() {
   return (
@@ -31,6 +31,9 @@ function App() {
           <Route path="services" element={<ServicesPage />} />
           {residentialServiceRoutes.map((slug) => (
             <Route key={slug} path={slug} element={<ServicePage slug={slug} />} />
+          ))}
+          {removedServiceRedirects.map((slug) => (
+            <Route key={slug} path={slug} element={<Navigate to="/services" replace />} />
           ))}
           {commercialRedirectSlugs.map((slug) => (
             <Route

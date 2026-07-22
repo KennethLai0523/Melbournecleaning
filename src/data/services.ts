@@ -510,8 +510,12 @@ export const services: Service[] = [
   },
 ];
 
+const HIDDEN_SERVICE_IDS = new Set(['carpet-cleaning', 'window-cleaning']);
+
 export function getPublicServices(): Service[] {
-  return services.filter((service) => service.category !== 'commercial');
+  return services.filter(
+    (service) => service.category !== 'commercial' && !HIDDEN_SERVICE_IDS.has(service.id),
+  );
 }
 
 export const serviceTypeOptions = getPublicServices().map((s) => ({
@@ -530,5 +534,8 @@ export function getServiceById(id: string): Service | undefined {
 export function getRelatedServices(service: Service): Service[] {
   return service.relatedServiceIds
     .map((id) => getServiceById(id))
-    .filter((s): s is Service => s !== undefined && s.category !== 'commercial');
+    .filter(
+      (s): s is Service =>
+        s !== undefined && s.category !== 'commercial' && !HIDDEN_SERVICE_IDS.has(s.id),
+    );
 }

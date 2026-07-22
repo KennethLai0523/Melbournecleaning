@@ -15,7 +15,7 @@ export function ServiceAreasSection() {
     <section className="section" aria-labelledby="service-areas-heading">
       <div className="container">
         <div className="section-header">
-          <span className="section-label">Service Areas</span>
+          <span className="section-label">Area We Clean</span>
           <h2 id="service-areas-heading">Cleaning Across Melbourne</h2>
           <p>We service Melbourne CBD, inner city and surrounding suburbs.</p>
         </div>
@@ -80,7 +80,7 @@ export function ServiceAreasSection() {
 
         <div style={{ textAlign: 'center' }}>
           <Link to="/service-areas" className="btn btn--secondary">
-            View All Service Areas
+            View Areas We Clean
           </Link>
         </div>
       </div>

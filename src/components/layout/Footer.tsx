@@ -75,7 +75,7 @@ export function Footer() {
             </ul>
             <h3 className={`${styles.heading} ${styles.headingSpaced}`}>Company</h3>
             <ul className={styles.links}>
-              <li><Link to="/service-areas">Service Areas</Link></li>
+              <li><Link to="/service-areas">Area We Clean</Link></li>
               <li><Link to="/about">About Us</Link></li>
               <li><Link to="/contact">Contact</Link></li>
               <li><a href={quoteCtaPath}>{quoteCtaLabel}</a></li>

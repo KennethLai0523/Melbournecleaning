@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { SEO } from '../components/layout/SEO';
 import { PageBanner } from '../components/ui/PageBanner';
 import { CTASection } from '../sections/CTASection';
 import { Icon } from '../components/ui/Icon';
-import { serviceAreas, serviceAreaDisclaimer } from '../data/serviceAreas';
+import { ServiceAreasMap } from '../components/maps/ServiceAreasMap';
+import {
+  getServiceAreaPins,
+  serviceAreas,
+  serviceAreaDisclaimer,
+} from '../data/serviceAreas';
 import { buildSuburbCheckWhatsAppUrl } from '../utils/whatsapp';
 import { seoConfig } from '../config/seoConfig';
 
 export default function ServiceAreasPage() {
   const [suburb, setSuburb] = useState('');
   const whatsAppUrl = suburb.trim() ? buildSuburbCheckWhatsAppUrl(suburb.trim()) : undefined;
+  const pins = useMemo(() => getServiceAreaPins(), []);
 
   return (
     <>
@@ -17,15 +23,15 @@ export default function ServiceAreasPage() {
         seo={seoConfig.serviceAreas}
         breadcrumbs={[
           { name: 'Home', path: '/' },
-          { name: 'Service Areas', path: '/service-areas' },
+          { name: 'Area We Clean', path: '/service-areas' },
         ]}
       />
       <PageBanner
-        title="Service Areas"
+        title="Area We Clean"
         description="Melbourne Cleaning Group services Melbourne CBD, inner city and surrounding suburbs."
         breadcrumbs={[
           { name: 'Home', path: '/' },
-          { name: 'Service Areas', path: '/service-areas' },
+          { name: 'Area We Clean', path: '/service-areas' },
         ]}
       />
       <section className="section">
@@ -65,10 +71,21 @@ export default function ServiceAreasPage() {
             </div>
           </div>
 
+          <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Areas on the map</h2>
+          <ServiceAreasMap pins={pins} />
+
           <div className="grid-2">
             {serviceAreas.map((group) => (
               <article key={group.id} className="card" style={{ padding: '1.5rem' }}>
-                <h2 style={{ fontSize: '1.125rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <h2
+                  style={{
+                    fontSize: '1.125rem',
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                >
                   <Icon name="mapPin" size={20} />
                   {group.name}
                 </h2>

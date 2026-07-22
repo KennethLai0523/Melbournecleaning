@@ -1,3 +1,5 @@
+import { suburbCoordinates, type SuburbPin } from './suburbCoordinates';
+
 export interface ServiceAreaGroup {
   id: string;
   name: string;
@@ -105,3 +107,16 @@ export const serviceAreas: ServiceAreaGroup[] = [
 
 export const serviceAreaDisclaimer =
   'Service availability may vary depending on the location, cleaning type and requested appointment time. Contact our team to confirm availability.';
+
+/** Flat list of map pins for every listed suburb */
+export function getServiceAreaPins(): SuburbPin[] {
+  const pins: SuburbPin[] = [];
+  for (const group of serviceAreas) {
+    for (const name of group.suburbs) {
+      const coords = suburbCoordinates[name];
+      if (!coords) continue;
+      pins.push({ name, groupId: group.id, lat: coords.lat, lng: coords.lng });
+    }
+  }
+  return pins;
+}
