@@ -4,9 +4,9 @@ import { ScrollJourney } from '../components/journey/ScrollJourney';
 import { Hero } from '../components/home/Hero';
 import { PropertyTypeSelector } from '../components/home/PropertyTypeSelector';
 import { QuoteBuilder } from '../components/quote/QuoteBuilder';
-import { TrustSection } from '../components/home/TrustSection';
-import { NextSteps } from '../components/home/NextSteps';
-import { FinalCTA } from '../components/home/FinalCTA';
+import { DatePickerSection } from '../components/home/DatePickerSection';
+import { ContactUsSection } from '../components/home/ContactUsSection';
+import { QuoteWorkspace } from '../components/home/QuoteWorkspace';
 import { seoConfig } from '../config/seoConfig';
 import { defaultQuoteState, type QuoteFormState } from '../types/quote';
 
@@ -29,6 +29,16 @@ export default function HomePage() {
     scrollToQuoteBuilder();
   }, [scrollToQuoteBuilder]);
 
+  const handleScheduleChange = useCallback(
+    (partial: Pick<QuoteFormState['quote'], 'preferredDate' | 'preferredTime'>) => {
+      setQuoteState((prev) => ({
+        ...prev,
+        quote: { ...prev.quote, ...partial },
+      }));
+    },
+    [],
+  );
+
   useEffect(() => {
     if (window.location.hash === '#quote-builder') {
       const timer = window.setTimeout(scrollToQuoteBuilder, 150);
@@ -41,14 +51,19 @@ export default function HomePage() {
       <SEO seo={seoConfig.home} />
       <ScrollJourney>
         <Hero onBuildQuote={scrollToQuoteBuilder} />
-        <PropertyTypeSelector
-          selectedId={quoteState.property.propertyType}
-          onSelect={handlePropertyTypeSelect}
-        />
-        <QuoteBuilder state={quoteState} onChange={setQuoteState} />
-        <TrustSection />
-        <NextSteps />
-        <FinalCTA onBuildQuote={scrollToQuoteBuilder} />
+        <QuoteWorkspace state={quoteState} onChange={setQuoteState}>
+          <PropertyTypeSelector
+            selectedId={quoteState.property.propertyType}
+            onSelect={handlePropertyTypeSelect}
+          />
+          <QuoteBuilder state={quoteState} onChange={setQuoteState} />
+          <DatePickerSection
+            preferredDate={quoteState.quote.preferredDate}
+            preferredTime={quoteState.quote.preferredTime}
+            onChange={handleScheduleChange}
+          />
+          <ContactUsSection state={quoteState} />
+        </QuoteWorkspace>
       </ScrollJourney>
     </>
   );

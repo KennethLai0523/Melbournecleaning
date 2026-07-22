@@ -38,7 +38,7 @@ function buildLineItems(selection: QuoteSelection): QuoteLineItem[] {
 }
 
 /**
- * Estimated total = sum of selected cleaning items only.
+ * Total = sum of selected cleaning items only.
  * Property record fields do not affect pricing.
  */
 export function calculateQuote(state: QuoteFormState): QuoteBreakdown {
@@ -55,7 +55,7 @@ export function calculateQuote(state: QuoteFormState): QuoteBreakdown {
 export function resetQuoteState(current: QuoteFormState): QuoteFormState {
   return {
     property: { ...current.property },
-    quote: { items: {}, notes: '' },
+    quote: { items: {}, notes: '', preferredDate: '', preferredTime: '' },
   };
 }
 

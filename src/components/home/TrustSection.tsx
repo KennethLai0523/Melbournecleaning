@@ -4,8 +4,8 @@ import styles from './TrustSection.module.css';
 const trustItems = [
   {
     icon: 'quote' as const,
-    title: 'Clear estimate before enquiry',
-    description: 'See an upfront item-by-item estimate before you contact us — no surprises when you enquire.',
+    title: 'Clear summary before enquiry',
+    description: 'See an upfront item-by-item summary before you contact us — no surprises when you enquire.',
   },
   {
     icon: 'flexible' as const,

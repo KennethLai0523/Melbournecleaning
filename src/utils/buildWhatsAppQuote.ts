@@ -1,6 +1,6 @@
 import { getPropertyTypeById } from '../data/pricing';
 import { businessConfig } from '../config/businessConfig';
-import type { QuoteBreakdown, QuoteFormState } from '../types/quote';
+import { formatStartTimeLabel, type QuoteBreakdown, type QuoteFormState } from '../types/quote';
 import { formatLineItemSummary, getFrequencyLabel, getLineItemLabel } from './calculateQuote';
 import { formatCurrency } from './formatCurrency';
 import { buildWhatsAppUrl } from './whatsapp';
@@ -33,17 +33,29 @@ export function buildQuoteWhatsAppMessage(
         `- ${getLineItemLabel(item)}: ${formatLineItemSummary(item, formatCurrency)}`,
       );
     }
-    lines.push('', `Estimated total: ${formatCurrency(breakdown.total)}`);
+    lines.push('', `Total: ${formatCurrency(breakdown.total)}`);
+  }
+
+  if (state.quote.preferredDate) {
+    const date = new Date(`${state.quote.preferredDate}T12:00:00`);
+    const dateLabel = Number.isNaN(date.getTime())
+      ? state.quote.preferredDate
+      : date.toLocaleDateString('en-AU', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        });
+    lines.push('', 'Preferred schedule:');
+    lines.push(`Date: ${dateLabel}`);
+    if (state.quote.preferredTime) {
+      lines.push(`Start time: ${formatStartTimeLabel(state.quote.preferredTime)}`);
+    }
   }
 
   if (state.quote.notes.trim()) {
     lines.push('', `Notes: ${state.quote.notes.trim()}`);
   }
-
-  lines.push(
-    '',
-    'I understand this is an initial estimate and may change after confirming the property\'s condition and exact cleaning requirements.',
-  );
 
   return lines.join('\n');
 }

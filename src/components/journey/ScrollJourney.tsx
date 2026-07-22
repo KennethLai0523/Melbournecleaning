@@ -4,10 +4,9 @@ import { JourneyStep } from './JourneyStep';
 
 const JOURNEY_STEPS = [
   { id: 0, label: 'Choose property type' },
-  { id: 1, label: 'Build your estimate' },
-  { id: 2, label: 'Confirm your requirements' },
-  { id: 3, label: 'Schedule the clean' },
-  { id: 4, label: 'Service completed' },
+  { id: 1, label: 'Build your summary' },
+  { id: 2, label: 'Pick a date' },
+  { id: 3, label: 'Contact us' },
 ];
 
 interface ScrollJourneyProps {

@@ -1,6 +1,6 @@
 import { businessConfig } from '../../config/businessConfig';
-import { pricingDisclaimer, getPropertyTypeById } from '../../data/pricing';
-import type { QuoteBreakdown, QuoteFormState } from '../../types/quote';
+import { getPropertyTypeById } from '../../data/pricing';
+import { formatStartTimeLabel, type QuoteBreakdown, type QuoteFormState } from '../../types/quote';
 import {
   formatLineItemSummary,
   getFrequencyLabel,
@@ -14,11 +14,22 @@ import styles from './QuoteSummary.module.css';
 interface QuoteSummaryProps {
   state: QuoteFormState;
   breakdown: QuoteBreakdown;
-  onReset: () => void;
   summaryId?: string;
 }
 
-export function QuoteSummary({ state, breakdown, onReset, summaryId = 'quote-summary' }: QuoteSummaryProps) {
+function formatPreferredDate(dateKey: string): string {
+  if (!dateKey) return '—';
+  const date = new Date(`${dateKey}T12:00:00`);
+  if (Number.isNaN(date.getTime())) return dateKey;
+  return date.toLocaleDateString('en-AU', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+
+export function QuoteSummary({ state, breakdown, summaryId = 'quote-summary' }: QuoteSummaryProps) {
   const propertyType = getPropertyTypeById(state.property.propertyType);
   const canSend = canSendWhatsAppQuote(breakdown);
   const whatsAppUrl = buildQuoteWhatsAppUrl(state, breakdown);
@@ -26,48 +37,66 @@ export function QuoteSummary({ state, breakdown, onReset, summaryId = 'quote-sum
   return (
     <aside className={styles.summary} id={summaryId} aria-labelledby={`${summaryId}-heading`}>
       <h3 id={`${summaryId}-heading`} className={styles.heading}>
-        Estimate Summary
+        Summary
       </h3>
 
       <div className={styles.recordSection}>
         <h4 className={styles.subheading}>Property information</h4>
         <p className={styles.recordLabel}>For our cleaning record</p>
-        <dl className={styles.recordList}>
-          <div className={styles.recordRow}>
-            <dt>Property type</dt>
-            <dd>{propertyType?.name ?? '—'}</dd>
+        <div className={styles.propertyGrid}>
+          <div className={styles.propertyCell}>
+            <span className={styles.propertyKey}>Property type</span>
+            <span className={styles.propertyVal}>{propertyType?.name ?? '—'}</span>
           </div>
-          <div className={styles.recordRow}>
-            <dt>Bedrooms</dt>
-            <dd>{state.property.bedrooms}</dd>
+          <div className={styles.propertyCell}>
+            <span className={styles.propertyKey}>Bedrooms</span>
+            <span className={styles.propertyVal}>{state.property.bedrooms}</span>
           </div>
-          <div className={styles.recordRow}>
-            <dt>Bathrooms</dt>
-            <dd>{state.property.bathrooms}</dd>
+          <div className={styles.propertyCell}>
+            <span className={styles.propertyKey}>Bathrooms</span>
+            <span className={styles.propertyVal}>{state.property.bathrooms}</span>
           </div>
-          <div className={styles.recordRow}>
-            <dt>Toilets</dt>
-            <dd>{state.property.toilets}</dd>
+          <div className={styles.propertyCell}>
+            <span className={styles.propertyKey}>Toilets</span>
+            <span className={styles.propertyVal}>{state.property.toilets}</span>
           </div>
-          <div className={styles.recordRow}>
-            <dt>Living rooms</dt>
-            <dd>{state.property.livingRooms}</dd>
+          <div className={styles.propertyCell}>
+            <span className={styles.propertyKey}>Living rooms</span>
+            <span className={styles.propertyVal}>{state.property.livingRooms}</span>
           </div>
-          <div className={styles.recordRow}>
-            <dt>Kitchens</dt>
-            <dd>{state.property.kitchens}</dd>
+          <div className={styles.propertyCell}>
+            <span className={styles.propertyKey}>Kitchens</span>
+            <span className={styles.propertyVal}>{state.property.kitchens}</span>
           </div>
-          <div className={styles.recordRow}>
-            <dt>Frequency</dt>
-            <dd>{getFrequencyLabel(state.property.frequency)}</dd>
+          <div className={`${styles.propertyCell} ${styles.propertyCellFull}`}>
+            <span className={styles.propertyKey}>Frequency</span>
+            <span className={styles.propertyVal}>{getFrequencyLabel(state.property.frequency)}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.recordSection}>
+        <h4 className={styles.subheading}>Preferred schedule</h4>
+        <dl className={styles.scheduleRow}>
+          <div className={styles.scheduleItem}>
+            <dt>Date</dt>
+            <dd>{formatPreferredDate(state.quote.preferredDate)}</dd>
+          </div>
+          <div className={styles.scheduleItem}>
+            <dt>Start time</dt>
+            <dd>
+              {state.quote.preferredTime
+                ? formatStartTimeLabel(state.quote.preferredTime)
+                : '—'}
+            </dd>
           </div>
         </dl>
       </div>
 
-      <div className={styles.estimateSection}>
-        <h4 className={styles.subheading}>Cleaning estimate</h4>
+      <div className={styles.cleaningSection}>
+        <h4 className={styles.subheading}>Cleaning summary</h4>
         {breakdown.isEmpty ? (
-          <p className={styles.emptyState}>Add cleaning items to build your estimate.</p>
+          <p className={styles.emptyState}>Add cleaning items to build your summary.</p>
         ) : (
           <dl className={styles.lines}>
             {breakdown.items.map((item) => (
@@ -80,14 +109,12 @@ export function QuoteSummary({ state, breakdown, onReset, summaryId = 'quote-sum
         )}
 
         <div className={styles.totalRow}>
-          <span>Estimated total</span>
+          <span>Total</span>
           <strong className={styles.total}>
             {breakdown.isEmpty ? '—' : formatCurrency(breakdown.total)}
           </strong>
         </div>
       </div>
-
-      <p className={styles.disclaimer}>{pricingDisclaimer}</p>
 
       <div className={styles.actions}>
         {canSend ? (
@@ -99,27 +126,24 @@ export function QuoteSummary({ state, breakdown, onReset, summaryId = 'quote-sum
             style={{ width: '100%' }}
           >
             <Icon name="whatsapp" size={18} />
-            Send Estimate on WhatsApp
+            Send Summary on WhatsApp
           </a>
         ) : (
           <button
             type="button"
             className={`btn btn--whatsapp ${styles.waDisabled}`}
             disabled
-            title="Add at least one cleaning item to send your estimate"
+            title="Add at least one cleaning item to send your summary"
             style={{ width: '100%' }}
           >
             <Icon name="whatsapp" size={18} />
-            Send Estimate on WhatsApp
+            Send Summary on WhatsApp
           </button>
         )}
         <a href={businessConfig.phone.tel} className="btn btn--secondary" style={{ width: '100%' }}>
           <Icon name="phone" size={18} />
           Call {businessConfig.phone.display}
         </a>
-        <button type="button" className="btn btn--sm" onClick={onReset} style={{ width: '100%' }}>
-          Reset Estimate
-        </button>
       </div>
     </aside>
   );

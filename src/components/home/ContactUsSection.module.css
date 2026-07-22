@@ -1,0 +1,65 @@
+.section {
+  scroll-margin-top: var(--sticky-header-height, 112px);
+  padding: 2.5rem 0 3.5rem;
+}
+
+.panel {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-radius: var(--radius);
+  padding: 1.75rem 1.5rem;
+}
+
+.label {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  margin-bottom: 0.75rem;
+}
+
+.panel h2 {
+  color: var(--color-white);
+  margin-bottom: 0.75rem;
+}
+
+.panel > p {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 1.5rem;
+  max-width: 540px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.primaryAction {
+  min-width: min(100%, 260px);
+}
+
+.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.hint {
+  margin: 1.25rem 0 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.panel :global(.btn--secondary) {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: var(--color-white);
+}
+
+.panel :global(.btn--secondary:hover) {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-white);
+  border-color: var(--color-white);
+}

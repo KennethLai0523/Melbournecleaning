@@ -28,9 +28,6 @@ export interface PropertyTypeOption {
   icon: CleaningIconName;
 }
 
-export const pricingDisclaimer =
-  'This is an initial estimate only. Final pricing may vary depending on the property\'s condition, access, location and specific cleaning requirements.';
-
 export const propertyTypes: PropertyTypeOption[] = [
   { id: 'apartment', name: 'Apartment', description: 'Multi-storey residential building', icon: 'apartment' },
   { id: 'unit', name: 'Unit', description: 'Compact self-contained residence', icon: 'unit' },

@@ -41,7 +41,7 @@ export function PropertyDetails({ details, onChange }: PropertyDetailsProps) {
       </div>
 
       <p className={styles.helper}>
-        These details help us understand the property and do not change the instant estimate.
+        These details help us understand the property and do not change the total.
       </p>
 
       <div className={styles.grid}>

@@ -3,15 +3,15 @@ import styles from './NextSteps.module.css';
 const steps = [
   {
     number: 1,
-    title: 'Send your estimate',
+    title: 'Send your summary',
     description:
-      'Share your built estimate via WhatsApp with our team. Include any notes about your property.',
+      'Share your built summary via WhatsApp with our team. Include any notes about your property.',
   },
   {
     number: 2,
     title: 'We confirm the details',
     description:
-      'We review your requirements and confirm what is included, timing and any adjustments to the estimate.',
+      'We review your requirements and confirm what is included, timing and any adjustments to the total.',
   },
   {
     number: 3,
@@ -37,7 +37,7 @@ export function NextSteps() {
       <div className="container">
         <div className={styles.header}>
           <h2 id="next-steps-heading">What happens next?</h2>
-          <p>A straightforward process from estimate to completed clean.</p>
+          <p>A straightforward process from summary to completed clean.</p>
         </div>
         <ol className={styles.steps}>
           {steps.map((step) => (

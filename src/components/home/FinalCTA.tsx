@@ -16,7 +16,7 @@ export function FinalCTA({ onBuildQuote }: FinalCTAProps) {
     >
       <div className={`container ${styles.inner}`}>
         <h2 id="final-cta-heading">Ready for a cleaner space?</h2>
-        <p>Build your estimate and send it to our Melbourne team in minutes.</p>
+        <p>Build your summary and send it to our Melbourne team in minutes.</p>
         <div className="btn-group" style={{ justifyContent: 'center' }}>
           <button type="button" className="btn btn--white" onClick={onBuildQuote}>
             Build Your Quote

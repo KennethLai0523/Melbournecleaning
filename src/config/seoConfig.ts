@@ -16,7 +16,7 @@ export const seoConfig: Record<string, PageSEO> = {
     path: '/',
     title: `${brand} | Residential Cleaning in Melbourne`,
     description:
-      'Professional residential cleaning services across Melbourne. Build an instant cleaning estimate and contact Melbourne Cleaning Group by phone, email or WhatsApp.',
+      'Professional residential cleaning services across Melbourne. Build an instant cleaning summary and contact Melbourne Cleaning Group by phone, email or WhatsApp.',
     ogImage: defaultOgImage,
   },
   services: {

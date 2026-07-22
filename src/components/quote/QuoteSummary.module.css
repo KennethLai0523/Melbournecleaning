@@ -3,8 +3,6 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 1.25rem;
-  position: sticky;
-  top: calc(var(--sticky-header-height, 112px) + 1rem);
 }
 
 .heading {
@@ -36,6 +34,40 @@
   font-style: italic;
 }
 
+.propertyGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1rem;
+  row-gap: 0.55rem;
+}
+
+.propertyCell {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+  font-size: 0.8125rem;
+}
+
+.propertyCellFull {
+  grid-column: 1 / -1;
+  padding-top: 0.35rem;
+  margin-top: 0.1rem;
+  border-top: 1px dashed var(--color-border);
+}
+
+.propertyKey {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.propertyVal {
+  font-weight: 600;
+  color: var(--color-charcoal);
+  text-align: right;
+}
+
 .recordList {
   margin: 0;
 }
@@ -60,11 +92,39 @@
   color: var(--color-charcoal);
 }
 
-.estimateSection {
+.scheduleRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 0.5rem 0 0;
+}
+
+.scheduleItem {
+  min-width: 0;
+}
+
+.scheduleItem dt {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  margin: 0 0 0.125rem;
+  font-size: 0.8125rem;
+}
+
+.scheduleItem dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cleaningSection {
   margin-bottom: 0.5rem;
 }
 
-.estimateSection .subheading {
+.cleaningSection .subheading {
   margin-bottom: 0.75rem;
 }
 
@@ -113,33 +173,10 @@
   color: var(--color-primary);
 }
 
-.disclaimer {
-  font-size: 0.8125rem;
-  color: var(--color-text-secondary);
-  line-height: 1.5;
-  margin: 0 0 1rem;
-  padding: 0.75rem;
-  background: var(--color-light-grey);
-  border-radius: var(--radius);
-  border-left: 3px solid var(--color-primary);
-}
-
 .actions {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
-
-.actions .btn--sm {
-  background: transparent;
-  border: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
-  font-weight: 500;
-}
-
-.actions .btn--sm:hover {
-  border-color: var(--color-charcoal);
-  color: var(--color-charcoal);
 }
 
 .waDisabled,
@@ -149,18 +186,14 @@
 }
 
 .emptyState {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--color-text-secondary);
   font-style: italic;
   margin: 0 0 0.75rem;
-  padding: 0.75rem;
+  padding: 0.625rem 0.5rem;
   background: var(--color-light-grey);
   border-radius: var(--radius);
   text-align: center;
+  white-space: nowrap;
 }
 
-@media (max-width: 899px) {
-  .summary {
-    position: static;
-  }
-}
