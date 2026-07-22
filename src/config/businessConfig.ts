@@ -40,8 +40,14 @@ export const businessConfig = {
   },
 
   address: {
-    city: 'Melbourne',
-    state: 'Victoria',
+    street: '7 Barlyn Rd',
+    suburb: 'Mount Waverley',
+    state: 'VIC',
+    postcode: '3149',
+    city: 'Mount Waverley',
+    country: 'Australia',
+    display: '7 Barlyn Rd, Mount Waverley VIC 3149',
+    mapsQuery: '7 Barlyn Rd, Mount Waverley VIC 3149, Australia',
   },
 
   serviceCoverageText: 'Serving Melbourne and surrounding suburbs',

@@ -33,20 +33,19 @@ export function Hero({ onBuildQuote }: HeroProps) {
         <div className={styles.content}>
           <h1 id="hero-heading">Professional Cleaning, Clearly Quoted</h1>
 
-          <div className={styles.ctaStack}>
+          <ul className={styles.trustStrip} aria-label="Key benefits">
+            {trustItems.map((item) => (
+              <li key={item.key}>
+                <CleaningIcon name={item.icon} size={16} />
+                <span>{item.label}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className={styles.ctaRow}>
             <button type="button" className={`btn btn--primary ${styles.ctaBtn}`} onClick={onBuildQuote}>
               Build Your Quote
             </button>
-
-            <ul className={styles.trustStrip} aria-label="Key benefits">
-              {trustItems.map((item) => (
-                <li key={item.key}>
-                  <CleaningIcon name={item.icon} size={16} />
-                  <span>{item.label}</span>
-                </li>
-              ))}
-            </ul>
-
             <a
               href={getDefaultWhatsAppUrl()}
               className={`btn btn--whatsapp ${styles.ctaBtn}`}

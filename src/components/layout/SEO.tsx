@@ -24,6 +24,14 @@ export function SEO({ seo, breadcrumbs, type = 'website', serviceName }: SEOProp
     email: businessConfig.email.address,
     image: `${businessConfig.siteUrl}/images/icon.png`,
     logo: `${businessConfig.siteUrl}/images/icon.png`,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: businessConfig.address.street,
+      addressLocality: businessConfig.address.suburb,
+      addressRegion: businessConfig.address.state,
+      postalCode: businessConfig.address.postcode,
+      addressCountry: 'AU',
+    },
     areaServed: {
       '@type': 'City',
       name: 'Melbourne',

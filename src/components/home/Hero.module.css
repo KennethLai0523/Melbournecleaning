@@ -16,30 +16,18 @@
 }
 
 .content h1 {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   max-width: 520px;
-}
-
-.ctaStack {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.25rem;
-  max-width: 520px;
-}
-
-.ctaBtn {
-  width: auto;
 }
 
 .trustStrip {
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
-  margin: 0;
+  margin: 0 0 1.5rem;
   padding: 0;
   list-style: none;
-  width: 100%;
+  max-width: 520px;
 }
 
 .trustStrip li {
@@ -61,6 +49,17 @@
   font-weight: 500;
   color: var(--color-text-secondary);
   font-size: 0.75rem;
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ctaBtn {
+  width: auto;
 }
 
 .imagePair {
@@ -116,6 +115,11 @@
 @media (max-width: 767px) {
   .hero {
     padding: 2rem 0 2.5rem;
+  }
+
+  .ctaRow {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .ctaBtn {

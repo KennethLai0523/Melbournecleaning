@@ -25,17 +25,12 @@ export default function HomePage() {
     scrollToStep('journey-choose-service');
   }, [scrollToStep]);
 
-  const scrollToQuoteBuilder = useCallback(() => {
-    scrollToStep('quote-builder');
-  }, [scrollToStep]);
-
   const handlePropertyTypeSelect = useCallback((propertyType: string) => {
     setQuoteState((prev) => ({
       ...prev,
       property: { ...prev.property, propertyType },
     }));
-    scrollToQuoteBuilder();
-  }, [scrollToQuoteBuilder]);
+  }, []);
 
   const handleScheduleChange = useCallback(
     (partial: Pick<QuoteFormState['quote'], 'preferredDate' | 'preferredTime'>) => {

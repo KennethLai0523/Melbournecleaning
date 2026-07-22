@@ -72,13 +72,9 @@ export default function ContactPage() {
                 <li style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
                   <Icon name="mapPin" size={22} />
                   <div>
-                    <strong>Location</strong>
+                    <strong>Address</strong>
                     <br />
-                    {businessConfig.address.city}, {businessConfig.address.state}
-                    <br />
-                    <span style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
-                      Melbourne, Victoria — exact office address to be added after verification.
-                    </span>
+                    {businessConfig.address.display}
                   </div>
                 </li>
                 <li style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
@@ -121,29 +117,28 @@ export default function ContactPage() {
           <div style={{ marginTop: '3rem' }}>
             <h2>Find Us</h2>
             <div
-              className="dev-notice"
-              role="note"
-              style={{ marginTop: '1rem' }}
-            >
-              <strong>Map placeholder:</strong> Embed a Google Maps iframe here once a verified business
-              address is available.
-            </div>
-            <div
               style={{
                 marginTop: '1rem',
-                background: 'var(--color-light-grey)',
                 border: '1px solid var(--color-border)',
                 borderRadius: 'var(--radius)',
+                overflow: 'hidden',
                 minHeight: '300px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--color-text-secondary)',
               }}
-              aria-label="Map placeholder"
             >
-              Map will appear here
+              <iframe
+                title={`Map showing ${businessConfig.address.display}`}
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(businessConfig.address.mapsQuery)}&z=16&output=embed`}
+                width="100%"
+                height="320"
+                style={{ border: 0, display: 'block' }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
             </div>
+            <p style={{ marginTop: '0.75rem', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
+              {businessConfig.address.display}
+            </p>
           </div>
         </div>
       </section>

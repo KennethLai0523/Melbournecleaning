@@ -42,6 +42,10 @@ export function Footer() {
                 <Icon name="mail" size={16} />
                 {businessConfig.email.address}
               </a>
+              <span className={styles.contactLink}>
+                <Icon name="mapPin" size={16} />
+                {businessConfig.address.display}
+              </span>
             </div>
             <p className={styles.hours}>
               <Icon name="clock" size={16} />
