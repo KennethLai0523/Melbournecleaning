@@ -16,25 +16,30 @@
 }
 
 .content h1 {
-  margin-bottom: 0.875rem;
+  margin-bottom: 1.5rem;
   max-width: 520px;
 }
 
-.subtitle {
-  font-size: 1.0625rem;
-  color: var(--color-text-secondary);
-  margin-bottom: 1.5rem;
+.ctaStack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
   max-width: 520px;
-  line-height: 1.65;
+}
+
+.ctaBtn {
+  width: auto;
 }
 
 .trustStrip {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.625rem 1rem;
-  margin-top: 1.75rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
 }
 
 .trustStrip li {
@@ -52,16 +57,10 @@
   flex-shrink: 0;
 }
 
-@media (min-width: 480px) {
-  .trustStrip {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width: 900px) {
-  .trustStrip {
-    grid-template-columns: 1fr;
-  }
+.feeNote {
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
 }
 
 .imagePair {
@@ -117,6 +116,11 @@
 @media (max-width: 767px) {
   .hero {
     padding: 2rem 0 2.5rem;
+  }
+
+  .ctaBtn {
+    width: 100%;
+    justify-content: center;
   }
 
   .image {

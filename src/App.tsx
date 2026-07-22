@@ -42,7 +42,7 @@ function App() {
           <Route path="service-areas" element={<ServiceAreasPage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="contact" element={<ContactPage />} />
-          <Route path="request-a-quote" element={<Navigate to="/#quote-builder" replace />} />
+          <Route path="request-a-quote" element={<Navigate to="/#journey-choose-service" replace />} />
           <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="terms-and-conditions" element={<TermsPage />} />
           <Route path="cancellation-policy" element={<CancellationPolicyPage />} />

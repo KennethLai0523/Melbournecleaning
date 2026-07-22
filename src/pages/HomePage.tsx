@@ -13,13 +13,21 @@ import { defaultQuoteState, type QuoteFormState } from '../types/quote';
 export default function HomePage() {
   const [quoteState, setQuoteState] = useState<QuoteFormState>(defaultQuoteState);
 
-  const scrollToQuoteBuilder = useCallback(() => {
-    const target = document.getElementById('quote-builder');
+  const scrollToStep = useCallback((elementId: string) => {
+    const target = document.getElementById(elementId);
     if (target) {
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
     }
   }, []);
+
+  const scrollToStep1 = useCallback(() => {
+    scrollToStep('journey-choose-service');
+  }, [scrollToStep]);
+
+  const scrollToQuoteBuilder = useCallback(() => {
+    scrollToStep('quote-builder');
+  }, [scrollToStep]);
 
   const handlePropertyTypeSelect = useCallback((propertyType: string) => {
     setQuoteState((prev) => ({
@@ -40,17 +48,20 @@ export default function HomePage() {
   );
 
   useEffect(() => {
-    if (window.location.hash === '#quote-builder') {
-      const timer = window.setTimeout(scrollToQuoteBuilder, 150);
+    const hash = window.location.hash;
+    if (hash === '#journey-choose-service' || hash === '#quote-builder' || hash === '#build-quote') {
+      const targetId =
+        hash === '#quote-builder' ? 'quote-builder' : 'journey-choose-service';
+      const timer = window.setTimeout(() => scrollToStep(targetId), 150);
       return () => window.clearTimeout(timer);
     }
-  }, [scrollToQuoteBuilder]);
+  }, [scrollToStep]);
 
   return (
     <>
       <SEO seo={seoConfig.home} />
       <ScrollJourney>
-        <Hero onBuildQuote={scrollToQuoteBuilder} />
+        <Hero onBuildQuote={scrollToStep1} />
         <QuoteWorkspace state={quoteState} onChange={setQuoteState}>
           <PropertyTypeSelector
             selectedId={quoteState.property.propertyType}

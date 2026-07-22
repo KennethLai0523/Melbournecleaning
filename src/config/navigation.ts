@@ -13,7 +13,7 @@ export const mainNavigation: NavItem[] = [
   { label: 'Contact', path: '/contact' },
 ];
 
-export const quoteCtaPath = '/#quote-builder';
+export const quoteCtaPath = '/#journey-choose-service';
 export const quoteCtaLabel = 'Build Your Quote';
 
 /** Top red-bar WhatsApp CTA — uses central WhatsApp config */
@@ -32,7 +32,7 @@ export const footerResidentialLinks: NavItem[] = [
 export const footerPopularServices: NavItem[] = [
   { label: 'All Services', path: '/services' },
   { label: 'Service Areas', path: '/service-areas' },
-  { label: 'Build Your Quote', path: '/#quote-builder' },
+  { label: 'Build Your Quote', path: '/#journey-choose-service' },
   { label: 'Contact', path: '/contact' },
 ];
 
