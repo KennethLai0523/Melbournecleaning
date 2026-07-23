@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,17 +22,14 @@ export function AppHeader() {
   const router = useRouter();
   const { profile, openAuth, logout } = useAuth();
   const insets = useSafeAreaInsets();
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const openProfile = () => {
     if (!profile) {
       openAuth();
       return;
     }
-    Alert.alert(profile.name, 'Manage your account', [
-      { text: 'View profile', onPress: () => router.push('/account') },
-      { text: 'Log out', style: 'destructive', onPress: () => void logout() },
-      { text: 'Cancel', style: 'cancel' },
-    ]);
+    setMenuVisible((visible) => !visible);
   };
 
   return (
@@ -65,6 +63,20 @@ export function AppHeader() {
             </Svg>
           )}
         </TouchableOpacity>
+        {profile && menuVisible && (
+          <View style={styles.profileMenu}>
+            <View style={styles.menuArrow} />
+            <TouchableOpacity
+              style={[styles.menuItem, styles.logoutItem]}
+              onPress={() => {
+                setMenuVisible(false);
+                void logout();
+              }}
+            >
+              <Text style={styles.logoutText}>Log out</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -80,6 +92,7 @@ const styles = StyleSheet.create({
     height: 64,
     justifyContent: 'space-between',
     paddingHorizontal: 16,
+    zIndex: 100,
   },
   brand: { alignItems: 'center', flexDirection: 'row', gap: 10 },
   logoMark: {
@@ -92,7 +105,7 @@ const styles = StyleSheet.create({
   },
   logoImage: { height: 42, width: 42 },
   brandTitle: { color: colors.text, fontSize: 16, fontWeight: '800' },
-  actions: { alignItems: 'center', flexDirection: 'row', gap: 8 },
+  actions: { alignItems: 'center', flexDirection: 'row', gap: 8, position: 'relative' },
   iconButton: { alignItems: 'center', height: 42, justifyContent: 'center', width: 42 },
   avatar: {
     alignItems: 'center',
@@ -105,4 +118,36 @@ const styles = StyleSheet.create({
     width: 42,
   },
   avatarText: { color: colors.primary, fontSize: 17, fontWeight: '800' },
+  profileMenu: {
+    backgroundColor: '#fff',
+    borderColor: colors.border,
+    borderRadius: 16,
+    borderWidth: 1,
+    elevation: 10,
+    padding: 8,
+    position: 'absolute',
+    right: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.16,
+    shadowRadius: 14,
+    top: 50,
+    width: 120,
+    zIndex: 200,
+  },
+  menuArrow: {
+    backgroundColor: '#fff',
+    borderColor: colors.border,
+    borderLeftWidth: 1,
+    borderTopWidth: 1,
+    height: 12,
+    position: 'absolute',
+    right: 15,
+    top: -7,
+    transform: [{ rotate: '45deg' }],
+    width: 12,
+  },
+  menuItem: { borderRadius: 10, paddingHorizontal: 12, paddingVertical: 12 },
+  logoutItem: { backgroundColor: '#fff2f3' },
+  logoutText: { color: '#b4232d', fontSize: 14, fontWeight: '800' },
 });
