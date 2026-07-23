@@ -66,8 +66,8 @@ export function AuthModal() {
     }
 
     if (mode === 'login') {
-      if (!(await login(email))) {
-        Alert.alert('Account not found', 'Register on this device first, or check your email.');
+      if (!(await login(email, password))) {
+        Alert.alert('Unable to log in', 'Check your email and password, then try again.');
       }
       return;
     }
@@ -81,13 +81,17 @@ export function AuthModal() {
       return;
     }
 
-    await register({
-      role,
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
-      property: role === 'customer' ? property : undefined,
-    });
+    try {
+      await register({
+        role,
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        property: role === 'customer' ? property : undefined,
+      }, password);
+    } catch {
+      Alert.alert('Unable to create account', 'Check the details or use a different email address.');
+    }
   };
 
   return (
@@ -149,7 +153,7 @@ export function AuthModal() {
           <TouchableOpacity style={styles.primaryButton} onPress={() => void submit()}>
             <Text style={styles.primaryText}>{mode === 'login' ? 'Log in' : `Create ${role} account`}</Text>
           </TouchableOpacity>
-          <Text style={styles.disclaimer}>Prototype account data is stored only on this device until the secure backend is connected.</Text>
+          <Text style={styles.disclaimer}>Your account and job information is securely synced with Firebase.</Text>
         </ScrollView>
       </KeyboardAvoidingView>
     </Modal>

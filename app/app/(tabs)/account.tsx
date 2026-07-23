@@ -119,7 +119,15 @@ export default function AccountScreen() {
           <Text style={styles.helper}>This address is automatically used with your quotes and jobs.</Text>
         </View>
       ) : (
-        <View style={styles.card}><Text style={styles.cardTitle}>Cleaner workspace</Text><Text style={styles.value}>Availability, assigned jobs and work history will appear here.</Text></View>
+        <View style={styles.card}>
+          <View style={styles.recordHeading}>
+            <Text style={styles.cardTitle}>Job Market</Text>
+            <TouchableOpacity onPress={() => router.push('/job-market')}>
+              <Text style={styles.editLink}>Browse jobs</Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.helper}>Browse available customer cleaning jobs on a separate page.</Text>
+        </View>
       )}
 
       {profile.role === 'customer' && draft && (

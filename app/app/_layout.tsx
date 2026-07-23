@@ -52,6 +52,10 @@ export default function RootLayout() {
       <StatusBar style="dark" />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="job-market"
+          options={{ title: 'Job Market', presentation: 'modal' }}
+        />
       </Stack>
     </AuthProvider>
   );
