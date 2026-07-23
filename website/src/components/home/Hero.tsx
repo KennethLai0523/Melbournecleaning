@@ -31,7 +31,7 @@ export function Hero({ onBuildQuote }: HeroProps) {
     <section className={styles.hero} aria-labelledby="hero-heading">
       <div className={`container ${styles.inner}`}>
         <div className={styles.content}>
-          <h1 id="hero-heading">Professional Cleaning, Clearly Quoted</h1>
+          <h1 id="hero-heading">Professional cleaning for Melbourne homes</h1>
 
           <ul className={styles.trustStrip} aria-label="Key benefits">
             {trustItems.map((item) => (
