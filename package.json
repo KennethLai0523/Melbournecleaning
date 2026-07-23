@@ -1,13 +1,9 @@
 {
   "private": true,
-  "workspaces": [
-    "website",
-    "app"
-  ],
   "scripts": {
-    "web": "npm run dev --workspace=website",
-    "web:build": "npm run build --workspace=website",
-    "mobile": "npm run start --workspace=app",
-    "mobile:clear": "npm run start --workspace=app -- --clear"
+    "web": "npm --prefix website run dev",
+    "web:build": "npm --prefix website run build",
+    "mobile": "npm --prefix app run start",
+    "mobile:clear": "npm --prefix app run start -- --clear"
   }
 }
