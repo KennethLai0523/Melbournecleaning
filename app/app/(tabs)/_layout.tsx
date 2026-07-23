@@ -1,14 +1,15 @@
 import { Tabs } from 'expo-router';
 import { TabIcon } from '../../src/components/TabIcon';
 import { colors } from '../../src/theme';
+import { AppHeader } from '../../src/components/AppHeader';
+import { AuthModal } from '../../src/components/AuthModal';
 
 export default function TabLayout() {
   return (
+    <>
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: colors.background },
-        headerTintColor: colors.text,
-        headerTitleStyle: { fontWeight: '700' },
+        header: () => <AppHeader />,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
         tabBarStyle: { height: 64, paddingBottom: 8, paddingTop: 8 },
@@ -18,7 +19,6 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          headerTitle: 'Melbourne Cleaning Group',
           tabBarIcon: ({ color }) => <TabIcon name="home" color={color} />,
         }}
       />
@@ -44,5 +44,7 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    <AuthModal />
+    </>
   );
 }

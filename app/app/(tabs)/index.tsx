@@ -19,6 +19,7 @@ export default function HomeScreen() {
       <View style={styles.heroCard}>
         <Text style={styles.eyebrow}>Melbourne Cleaning Group</Text>
         <Text style={styles.title}>Professional cleaning for Melbourne homes</Text>
+        <Text style={styles.connected}>Mobile app connected successfully.</Text>
         <Text style={styles.copy}>Serving Melbourne and surrounding suburbs.</Text>
 
         <View style={styles.actionRow}>
@@ -85,6 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   title: { fontSize: 30, lineHeight: 36, fontWeight: '800', color: colors.text, marginBottom: 8 },
+  connected: { color: colors.primary, fontSize: 15, fontWeight: '700', marginBottom: 8 },
   copy: { color: colors.textMuted, fontSize: 16, lineHeight: 24, marginBottom: 16 },
   actionRow: { gap: 12 },
   button: {
