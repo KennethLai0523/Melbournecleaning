@@ -40,11 +40,17 @@ service cloud.firestore {
           && resource.data.status == 'pending'
           && request.resource.data.customerId == resource.data.customerId)
         ||
-        (userRole() == 'cleaner'
-          && resource.data.status == 'pending'
-          && request.resource.data.status == 'accepted'
-          && request.resource.data.acceptedBy == request.auth.uid)
-      );
+          (userRole() == 'cleaner'
+            && resource.data.status == 'pending'
+            && request.resource.data.status == 'accepted'
+            && request.resource.data.acceptedBy == request.auth.uid)
+          ||
+          (userRole() == 'cleaner'
+            && resource.data.acceptedBy == request.auth.uid
+            && resource.data.status == 'accepted'
+            && request.resource.data.acceptedBy == request.auth.uid
+            && request.resource.data.status in ['accepted', 'completed'])
+        );
 
       allow delete: if signedIn() && resource.data.customerId == request.auth.uid;
     }

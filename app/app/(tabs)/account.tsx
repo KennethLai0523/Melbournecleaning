@@ -164,13 +164,24 @@ export default function AccountScreen() {
           <Text style={styles.helper}>This address is automatically used with your quotes and jobs.</Text>
         </View>
       ) : (
-        <View style={styles.card}>
-          <View style={styles.recordHeading}>
-            <Text style={styles.cardTitle}>Job Market</Text>
-            <TouchableOpacity onPress={() => router.push('/job-market')}><Text style={styles.editLink}>Browse jobs</Text></TouchableOpacity>
+        <>
+          <View style={styles.card}>
+            <View style={styles.recordHeading}>
+              <Text style={styles.cardTitle}>Job assigned</Text>
+              <TouchableOpacity onPress={() => router.push('/job-market')}><Text style={styles.editLink}>Browse jobs</Text></TouchableOpacity>
+            </View>
+            <Text style={styles.helper}>Jobs assigned to you stay here while you complete the cleaning and upload the required photos.</Text>
+            <Text style={styles.value}>{jobs.filter((job) => job.status === 'accepted' && job.acceptedBy === profile.id).length} currently assigned</Text>
           </View>
-          <Text style={styles.helper}>Browse available customer cleaning jobs on a separate page.</Text>
-        </View>
+          <View style={styles.card}>
+            <View style={styles.recordHeading}>
+              <Text style={styles.cardTitle}>Job done</Text>
+              <TouchableOpacity onPress={() => router.push('/job-market')}><Text style={styles.editLink}>View completed</Text></TouchableOpacity>
+            </View>
+            <Text style={styles.helper}>Cleaning jobs you have completed are saved here.</Text>
+            <Text style={styles.value}>{jobs.filter((job) => job.status === 'completed' && job.acceptedBy === profile.id).length} completed</Text>
+          </View>
+        </>
       )}
 
       {profile.role === 'customer' && draft && (

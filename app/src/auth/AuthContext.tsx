@@ -56,9 +56,11 @@ export interface QuoteRecord {
 }
 
 export interface CleaningJob extends QuoteRecord {
-  status: 'pending' | 'accepted' | 'cancelled';
+  status: 'pending' | 'accepted' | 'completed' | 'cancelled';
   customerId?: string;
   acceptedBy?: string;
+  customerAddress?: string;
+  cleaningPhotos?: Record<string, string>;
 }
 
 interface AuthContextValue {
@@ -80,6 +82,8 @@ interface AuthContextValue {
   updateJob: (jobId: string, quote: QuoteState, total: number) => Promise<void>;
   updateAvatar: (avatarUri: string) => Promise<void>;
   acceptJob: (jobId: string) => Promise<void>;
+  uploadJobPhoto: (jobId: string, slotId: string, photoUri: string) => Promise<void>;
+  completeJob: (jobId: string) => Promise<void>;
   updateCleanerProfile: (serviceArea: string, gender: CleanerGender) => Promise<void>;
 }
 
@@ -125,7 +129,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!profile) return;
     const jobsQuery = profile.role === 'customer'
       ? query(collection(db, 'jobs'), where('customerId', '==', profile.id))
-      : query(collection(db, 'jobs'), where('status', '==', 'pending'));
+      : collection(db, 'jobs');
     return onSnapshot(jobsQuery, (snapshot) => {
       setJobs(snapshot.docs
         .map((record) => ({ id: record.id, ...record.data() } as CleaningJob))
@@ -226,6 +230,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const jobRef = doc(collection(db, 'jobs'));
       await setDoc(jobRef, {
         customerId: user.uid,
+        customerAddress: profile?.property?.address ?? '',
         quote,
         total,
         updatedAt: new Date().toISOString(),
@@ -262,6 +267,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const user = auth.currentUser;
       if (!user) return;
       await updateDoc(doc(db, 'jobs', jobId), { status: 'accepted', acceptedBy: user.uid, updatedAt: new Date().toISOString() });
+    },
+    uploadJobPhoto: async (jobId, slotId, photoUri) => {
+      const user = auth.currentUser;
+      if (!user || profile?.role !== 'cleaner') return;
+      const response = await fetch(photoUri);
+      const blob = await response.blob();
+      const photoRef = ref(storage, `job-photos/${jobId}/${user.uid}/${slotId}.jpg`);
+      await uploadBytes(photoRef, blob, { contentType: blob.type || 'image/jpeg' });
+      const downloadUrl = await getDownloadURL(photoRef);
+      await updateDoc(doc(db, 'jobs', jobId), {
+        [`cleaningPhotos.${slotId}`]: downloadUrl,
+        updatedAt: new Date().toISOString(),
+      });
+    },
+    completeJob: async (jobId) => {
+      const user = auth.currentUser;
+      if (!user || profile?.role !== 'cleaner') return;
+      await updateDoc(doc(db, 'jobs', jobId), {
+        status: 'completed',
+        completedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
     },
     updateCleanerProfile: async (serviceArea, gender) => {
       const user = auth.currentUser;
