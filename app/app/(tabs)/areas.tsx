@@ -1,18 +1,49 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
+import { WebView } from 'react-native-webview';
 import { CONTACT_DETAILS } from '../../src/config/contact';
+import { getServiceAreaPins, serviceAreas } from '../../src/data/serviceAreas';
 import { colors } from '../../src/theme';
 import { openExternal } from '../../src/utils/links';
 
-const serviceAreas = [
-  { name: 'Melbourne CBD and Inner City', suburbs: ['Melbourne CBD', 'Southbank', 'Docklands', 'Carlton', 'Fitzroy', 'Collingwood', 'Richmond', 'South Yarra', 'Prahran', 'St Kilda'] },
-  { name: 'Northern Suburbs', suburbs: ['Brunswick', 'Coburg', 'Preston', 'Thornbury', 'Northcote', 'Reservoir', 'Bundoora', 'Epping', 'Craigieburn', 'Broadmeadows'] },
-  { name: 'Eastern Suburbs', suburbs: ['Hawthorn', 'Camberwell', 'Box Hill', 'Doncaster', 'Ringwood', 'Blackburn', 'Mitcham', 'Vermont', 'Balwyn', 'Kew'] },
-  { name: 'South-Eastern Suburbs', suburbs: ['Caulfield', 'Oakleigh', 'Clayton', 'Glen Waverley', 'Mount Waverley', 'Dandenong', 'Springvale', 'Noble Park', 'Bentleigh', 'Carnegie'] },
-  { name: 'Western Suburbs', suburbs: ['Footscray', 'Sunshine', 'Williamstown', 'Altona', 'Werribee', 'Point Cook', 'Hoppers Crossing', 'Deer Park', 'St Albans', 'Keilor'] },
-  { name: 'Bayside Areas', suburbs: ['Brighton', 'Sandringham', 'Hampton', 'Beaumaris', 'Black Rock', 'Mordialloc', 'Cheltenham', 'Mentone', 'Parkdale', 'Elwood'] },
-];
+const mapPins = getServiceAreaPins();
+const leafletHtml = `<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    html,body,#map{height:100%;width:100%;margin:0;background:#f3f3f3}
+    .leaflet-popup-content{font:600 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .leaflet-control-attribution{font-size:9px}
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const pins = ${JSON.stringify(mapPins)};
+    const map = L.map('map', { zoomControl: true }).setView([-37.84, 144.97], 9);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 18
+    }).addTo(map);
+    const markerIcon = L.divIcon({
+      className: '',
+      html: '<div style="width:18px;height:18px;border-radius:50% 50% 50% 0;background:#C8102E;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,.3);transform:rotate(-45deg)"></div>',
+      iconSize: [18,18],
+      iconAnchor: [9,18]
+    });
+    const bounds = [];
+    pins.forEach(pin => {
+      L.marker([pin.lat, pin.lng], { icon: markerIcon }).addTo(map).bindPopup(pin.name);
+      bounds.push([pin.lat, pin.lng]);
+    });
+    if (bounds.length) map.fitBounds(bounds, { padding: [18,18] });
+  </script>
+</body>
+</html>`;
 
 function MapPin() {
   return (
@@ -42,6 +73,21 @@ export default function AreasScreen() {
           <Text style={styles.buttonText}>Check via WhatsApp</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.mapCard}>
+        <Text style={styles.cardTitle}>Areas on the map</Text>
+        <Text style={styles.mapHint}>Pinch to zoom and tap a marker to view the suburb.</Text>
+        <View style={styles.mapFrame}>
+          <WebView
+            source={{ html: leafletHtml }}
+            originWhitelist={['*']}
+            javaScriptEnabled
+            domStorageEnabled
+            nestedScrollEnabled
+            style={styles.map}
+          />
+        </View>
+        <Text style={styles.mapNetworkHint}>Map tiles require an internet connection.</Text>
+      </View>
       {serviceAreas.map((group) => (
         <View key={group.name} style={styles.card}>
           <View style={styles.cardHeading}><MapPin /><Text style={styles.cardTitle}>{group.name}</Text></View>
@@ -61,6 +107,11 @@ const styles = StyleSheet.create({
   title: { color: colors.text, fontSize: 28, fontWeight: '800' },
   subtitle: { color: colors.textMuted, fontSize: 15, lineHeight: 22 },
   checkCard: { backgroundColor: '#fff6f8', borderColor: '#f3c5cf', borderRadius: 18, borderWidth: 1, gap: 12, padding: 18 },
+  mapCard: { backgroundColor: '#fff', borderColor: colors.border, borderRadius: 18, borderWidth: 1, gap: 8, padding: 14 },
+  mapFrame: { borderRadius: 13, height: 340, overflow: 'hidden' },
+  map: { backgroundColor: '#f1f1f1', flex: 1 },
+  mapHint: { color: colors.textMuted, fontSize: 13, lineHeight: 18 },
+  mapNetworkHint: { color: colors.textMuted, fontSize: 11, textAlign: 'center' },
   card: { backgroundColor: '#fff', borderColor: colors.border, borderRadius: 18, borderWidth: 1, padding: 18 },
   cardHeading: { alignItems: 'center', flexDirection: 'row', gap: 8, marginBottom: 12 },
   cardTitle: { color: colors.text, fontSize: 18, fontWeight: '800' },
