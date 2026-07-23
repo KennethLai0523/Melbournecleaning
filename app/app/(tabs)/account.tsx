@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '../../src/auth/AuthContext';
 import { cleaningItems, formatCurrency, type QuoteState } from '../../src/data/quote';
 import { colors } from '../../src/theme';
@@ -22,7 +23,7 @@ function QuoteDetails({ quote }: { quote: QuoteState }) {
 
 export default function AccountScreen() {
   const router = useRouter();
-  const { profile, loading, openAuth, deleteAccount, draft, jobs, cancelJob, submitJob, updatePropertyAddress } = useAuth();
+  const { profile, loading, openAuth, deleteAccount, draft, jobs, cancelJob, submitJob, updatePropertyAddress, updateAvatar } = useAuth();
   const [confirmation, setConfirmation] = useState('');
   const [editingAddress, setEditingAddress] = useState(false);
   const [address, setAddress] = useState('');
@@ -55,11 +56,33 @@ export default function AccountScreen() {
   };
 
   const joinedDate = new Date(profile.joinedAt || Number(profile.id));
+  const chooseProfilePicture = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert('Photo access required', 'Allow photo access to choose a profile picture.');
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+    if (!result.canceled && result.assets[0]?.uri) await updateAvatar(result.assets[0].uri);
+  };
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <View style={styles.headingRow}>
-        <View style={styles.largeAvatar}><Text style={styles.largeAvatarText}>{profile.name.slice(0, 1).toUpperCase()}</Text></View>
+        <TouchableOpacity
+          accessibilityLabel="Choose profile picture"
+          style={styles.largeAvatar}
+          onPress={() => void chooseProfilePicture()}
+        >
+          {profile.avatarUri
+            ? <Image source={{ uri: profile.avatarUri }} style={styles.largeAvatarImage} />
+            : <Text style={styles.largeAvatarText}>{profile.name.slice(0, 1).toUpperCase()}</Text>}
+        </TouchableOpacity>
         <View style={styles.headingCopy}>
           <Text style={styles.title}>{profile.name}</Text>
           <Text style={styles.role}>{profile.role === 'customer' ? 'Customer account' : 'Cleaner account'}</Text>
@@ -152,8 +175,9 @@ const styles = StyleSheet.create({
   center: { alignItems: 'center', backgroundColor: colors.background, flex: 1, gap: 14, justifyContent: 'center', padding: 24 },
   headingRow: { alignItems: 'center', flexDirection: 'row', gap: 14 },
   headingCopy: { flex: 1 },
-  largeAvatar: { alignItems: 'center', backgroundColor: colors.primary, borderRadius: 30, height: 60, justifyContent: 'center', width: 60 },
+  largeAvatar: { alignItems: 'center', backgroundColor: colors.primary, borderRadius: 30, height: 60, justifyContent: 'center', position: 'relative', width: 60 },
   largeAvatarText: { color: '#fff', fontSize: 24, fontWeight: '800' },
+  largeAvatarImage: { borderRadius: 30, height: 60, width: 60 },
   title: { color: colors.text, fontSize: 27, fontWeight: '800' },
   role: { color: colors.primary, fontSize: 14, fontWeight: '700', marginTop: 3 },
   subtitle: { color: colors.textMuted, fontSize: 15, lineHeight: 22, textAlign: 'center' },

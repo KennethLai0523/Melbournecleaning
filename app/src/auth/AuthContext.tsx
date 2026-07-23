@@ -21,6 +21,7 @@ export interface AccountProfile {
   name: string;
   email: string;
   phone: string;
+  avatarUri?: string;
   property?: PropertyProfile;
 }
 
@@ -52,6 +53,7 @@ interface AuthContextValue {
   cancelJob: (jobId: string) => Promise<void>;
   updatePropertyAddress: (address: string) => Promise<void>;
   updateJob: (jobId: string, quote: QuoteState, total: number) => Promise<void>;
+  updateAvatar: (avatarUri: string) => Promise<void>;
 }
 
 const ACCOUNT_KEY = '@melbourne-cleaning/account';
@@ -181,6 +183,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         );
         await AsyncStorage.setItem(JOBS_KEY, JSON.stringify(nextJobs));
         setJobs(nextJobs);
+      },
+      updateAvatar: async (avatarUri) => {
+        if (!profile) return;
+        const nextProfile = { ...profile, avatarUri };
+        await AsyncStorage.setItem(ACCOUNT_KEY, JSON.stringify(nextProfile));
+        setSavedAccount(nextProfile);
+        setProfile(nextProfile);
       },
     }),
     [authVisible, draft, jobs, loading, profile, savedAccount],

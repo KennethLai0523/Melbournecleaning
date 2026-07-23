@@ -1,6 +1,6 @@
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useEffect, useMemo, useState } from 'react';
-import { useLocalSearchParams } from 'expo-router';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { openExternal } from '../../src/utils/links';
 import { CONTACT_DETAILS } from '../../src/config/contact';
 import {
@@ -18,6 +18,7 @@ import { CleaningItemIcon } from '../../src/components/CleaningItemIcon';
 import { SchedulePicker } from '../../src/components/SchedulePicker';
 
 export default function QuoteScreen() {
+  const scrollRef = useRef<ScrollView>(null);
   const { draft: editDraft, jobId } = useLocalSearchParams<{ draft?: string; jobId?: string }>();
   const [state, setState] = useState<QuoteState>(defaultQuoteState);
   const [showAll, setShowAll] = useState(false);
@@ -26,6 +27,12 @@ export default function QuoteScreen() {
   const visibleItems = useMemo(
     () => cleaningItems.filter((item) => showAll || item.defaultVisible || (state.items[item.id] ?? 0) > 0),
     [showAll, state.items],
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      requestAnimationFrame(() => scrollRef.current?.scrollTo({ y: 0, animated: false }));
+    }, []),
   );
 
   useEffect(() => {
@@ -105,7 +112,7 @@ export default function QuoteScreen() {
   };
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+    <ScrollView ref={scrollRef} style={styles.screen} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Quote</Text>
       <Text style={styles.subtitle}>
         Choose your cleaning frequency and the services you need.
