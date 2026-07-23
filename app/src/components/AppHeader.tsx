@@ -56,7 +56,7 @@ export function AppHeader() {
         <TouchableOpacity accessibilityLabel="Profile" style={styles.avatar} onPress={openProfile}>
           {profile ? (
             profile.avatarUri ? (
-              <Image source={{ uri: profile.avatarUri }} style={styles.avatarImage} />
+              <Image source={{ uri: profile.avatarUri }} style={styles.avatarImage} resizeMode="cover" />
             ) : (
               <Text style={styles.avatarText}>{profile.name.slice(0, 1).toUpperCase()}</Text>
             )
@@ -119,10 +119,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 42,
     justifyContent: 'center',
+    overflow: 'hidden',
     width: 42,
   },
   avatarText: { color: colors.primary, fontSize: 17, fontWeight: '800' },
-  avatarImage: { height: '100%', width: '100%' },
+  avatarImage: { borderRadius: 20, height: 40, width: 40 },
   profileMenu: {
     backgroundColor: '#fff',
     borderColor: colors.border,

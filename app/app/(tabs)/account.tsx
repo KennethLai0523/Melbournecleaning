@@ -94,11 +94,53 @@ export default function AccountScreen() {
       </View>
 
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Profile</Text>
+        <View style={styles.recordHeading}>
+          <Text style={styles.cardTitle}>Profile</Text>
+          {profile.role === 'cleaner' && !editingCleaner && (
+            <TouchableOpacity onPress={() => {
+              setServiceArea(profile.serviceArea ?? '');
+              setGender(profile.gender ?? 'Prefer not to say');
+              setEditingCleaner(true);
+            }}>
+              <Text style={styles.editLink}>Edit</Text>
+            </TouchableOpacity>
+          )}
+        </View>
         <Text style={styles.label}>Email</Text><Text style={styles.value}>{profile.email}</Text>
         <Text style={styles.label}>Phone</Text><Text style={styles.value}>{profile.phone}</Text>
         <Text style={styles.label}>Joined since</Text>
         <Text style={styles.value}>{joinedDate.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}</Text>
+        {profile.role === 'cleaner' && (
+          editingCleaner ? (
+            <>
+              <Text style={styles.label}>Area based</Text>
+              <TextInput style={styles.input} placeholder="Area based, e.g. Burwood" placeholderTextColor="#6b6f76" value={serviceArea} onChangeText={setServiceArea} />
+              <Text style={styles.label}>Gender</Text>
+              <View style={styles.optionWrap}>
+                {(['Female', 'Male', 'Prefer not to say'] as CleanerGender[]).map((option) => (
+                  <TouchableOpacity key={option} style={[styles.optionChip, gender === option && styles.optionChipActive]} onPress={() => setGender(option)}>
+                    <Text style={[styles.optionText, gender === option && styles.optionTextActive]}>{option}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <View style={styles.inlineActions}>
+                <TouchableOpacity style={styles.smallPrimaryButton} onPress={() => {
+                  if (!serviceArea.trim()) return Alert.alert('Area required', 'Enter the Melbourne area where you are based.');
+                  void updateCleanerProfile(serviceArea.trim(), gender).then(() => setEditingCleaner(false));
+                }}><Text style={styles.smallPrimaryText}>Save profile</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.smallOutlineButton} onPress={() => setEditingCleaner(false)}><Text style={styles.editLink}>Cancel</Text></TouchableOpacity>
+              </View>
+            </>
+          ) : (
+            <>
+              <Text style={styles.label}>Area based</Text>
+              <Text style={styles.value}>{profile.serviceArea || 'Not added yet'}</Text>
+              <Text style={styles.label}>Gender</Text>
+              <Text style={styles.value}>{profile.gender || 'Not added yet'}</Text>
+              <Text style={styles.helper}>Area and gender appear publicly in the Services tab.</Text>
+            </>
+          )
+        )}
       </View>
 
       {profile.role === 'customer' && profile.property ? (
@@ -122,55 +164,13 @@ export default function AccountScreen() {
           <Text style={styles.helper}>This address is automatically used with your quotes and jobs.</Text>
         </View>
       ) : (
-        <>
-          <View style={styles.card}>
-            <View style={styles.recordHeading}>
-              <Text style={styles.cardTitle}>Cleaner profile</Text>
-              {!editingCleaner && (
-                <TouchableOpacity onPress={() => {
-                  setServiceArea(profile.serviceArea ?? '');
-                  setGender(profile.gender ?? 'Prefer not to say');
-                  setEditingCleaner(true);
-                }}><Text style={styles.editLink}>Edit</Text></TouchableOpacity>
-              )}
-            </View>
-            {editingCleaner ? (
-              <>
-                <TextInput style={styles.input} placeholder="Area based, e.g. Burwood" placeholderTextColor="#6b6f76" value={serviceArea} onChangeText={setServiceArea} />
-                <Text style={styles.label}>Gender</Text>
-                <View style={styles.optionWrap}>
-                  {(['Female', 'Male', 'Prefer not to say'] as CleanerGender[]).map((option) => (
-                    <TouchableOpacity key={option} style={[styles.optionChip, gender === option && styles.optionChipActive]} onPress={() => setGender(option)}>
-                      <Text style={[styles.optionText, gender === option && styles.optionTextActive]}>{option}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-                <View style={styles.inlineActions}>
-                  <TouchableOpacity style={styles.smallPrimaryButton} onPress={() => {
-                    if (!serviceArea.trim()) return Alert.alert('Area required', 'Enter the Melbourne area where you are based.');
-                    void updateCleanerProfile(serviceArea.trim(), gender).then(() => setEditingCleaner(false));
-                  }}><Text style={styles.smallPrimaryText}>Save profile</Text></TouchableOpacity>
-                  <TouchableOpacity style={styles.smallOutlineButton} onPress={() => setEditingCleaner(false)}><Text style={styles.editLink}>Cancel</Text></TouchableOpacity>
-                </View>
-              </>
-            ) : (
-              <>
-                <Text style={styles.label}>Area based</Text>
-                <Text style={styles.value}>{profile.serviceArea || 'Not added yet'}</Text>
-                <Text style={styles.label}>Gender</Text>
-                <Text style={styles.value}>{profile.gender || 'Not added yet'}</Text>
-              </>
-            )}
-            <Text style={styles.helper}>These details appear publicly in the Services tab.</Text>
+        <View style={styles.card}>
+          <View style={styles.recordHeading}>
+            <Text style={styles.cardTitle}>Job Market</Text>
+            <TouchableOpacity onPress={() => router.push('/job-market')}><Text style={styles.editLink}>Browse jobs</Text></TouchableOpacity>
           </View>
-          <View style={styles.card}>
-            <View style={styles.recordHeading}>
-              <Text style={styles.cardTitle}>Job Market</Text>
-              <TouchableOpacity onPress={() => router.push('/job-market')}><Text style={styles.editLink}>Browse jobs</Text></TouchableOpacity>
-            </View>
-            <Text style={styles.helper}>Browse available customer cleaning jobs on a separate page.</Text>
-          </View>
-        </>
+          <Text style={styles.helper}>Browse available customer cleaning jobs on a separate page.</Text>
+        </View>
       )}
 
       {profile.role === 'customer' && draft && (
