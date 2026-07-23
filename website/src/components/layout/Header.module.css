@@ -130,6 +130,82 @@
   margin-left: 0.75rem;
 }
 
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.accountWrap {
+  position: relative;
+}
+
+.avatarButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: #fafafa;
+  color: var(--color-charcoal);
+  transition: background-color var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.avatarButton:hover {
+  background: var(--color-light-grey);
+  border-color: #cfcfcf;
+}
+
+.avatarButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.avatarIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.accountMenu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 190px;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-white);
+  box-shadow: var(--shadow-md);
+  z-index: 1002;
+}
+
+.accountTitle {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+}
+
+.accountMenu a {
+  display: block;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  color: var(--color-charcoal);
+  text-decoration: none;
+  font-size: 0.9375rem;
+}
+
+.accountMenu a:hover,
+.accountMenu a:focus-visible {
+  background: var(--color-light-grey);
+  color: var(--color-primary);
+  outline: none;
+}
+
 @media (min-width: 1100px) {
   .topBarContacts {
     display: flex;
@@ -200,6 +276,28 @@
   .navCta {
     margin: 1.5rem 0 0;
     width: 100%;
+  }
+
+  .navActions {
+    margin-top: 1rem;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .accountWrap {
+    width: 100%;
+  }
+
+  .avatarButton {
+    width: 100%;
+    border-radius: var(--radius);
+  }
+
+  .accountMenu {
+    position: static;
+    margin-top: 0.75rem;
+    width: 100%;
+    box-shadow: none;
   }
 }
 

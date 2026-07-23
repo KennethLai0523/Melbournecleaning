@@ -6,6 +6,8 @@ import ServicePage from './pages/ServicePage';
 import ServiceAreasPage from './pages/ServiceAreasPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import CustomerLoginPage from './pages/CustomerLoginPage';
+import CleanerLoginPage from './pages/CleanerLoginPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsPage from './pages/TermsPage';
 import CancellationPolicyPage from './pages/CancellationPolicyPage';
@@ -45,6 +47,8 @@ function App() {
           <Route path="service-areas" element={<ServiceAreasPage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="contact" element={<ContactPage />} />
+          <Route path="login/customer" element={<CustomerLoginPage />} />
+          <Route path="login/cleaner" element={<CleanerLoginPage />} />
           <Route path="request-a-quote" element={<Navigate to="/#journey-choose-service" replace />} />
           <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="terms-and-conditions" element={<TermsPage />} />

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { businessConfig } from '../../config/businessConfig';
 import {
@@ -13,11 +13,14 @@ import styles from './Header.module.css';
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const accountRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setMenuOpen(false);
+    setAccountOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -33,6 +36,29 @@ export function Header() {
       document.body.style.overflow = '';
     };
   }, [menuOpen]);
+
+  useEffect(() => {
+    if (!accountOpen) return;
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!accountRef.current?.contains(event.target as Node)) {
+        setAccountOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setAccountOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [accountOpen]);
 
   return (
     <div className={`${styles.stickyShell} ${scrolled ? styles.stickyShellScrolled : ''}`}>
@@ -99,9 +125,44 @@ export function Header() {
                   </li>
                 ))}
               </ul>
-              <a href={quoteCtaPath} className={`btn btn--primary ${styles.navCta}`}>
-                {quoteCtaLabel}
-              </a>
+              <div className={styles.navActions}>
+                <a href={quoteCtaPath} className={`btn btn--primary ${styles.navCta}`}>
+                  {quoteCtaLabel}
+                </a>
+                <div className={styles.accountWrap} ref={accountRef}>
+                  <button
+                    type="button"
+                    className={styles.avatarButton}
+                    aria-label="Open account menu"
+                    aria-haspopup="menu"
+                    aria-expanded={accountOpen}
+                    onClick={() => setAccountOpen((open) => !open)}
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      focusable="false"
+                      className={styles.avatarIcon}
+                    >
+                      <path
+                        d="M12 12a4.25 4.25 0 1 0-4.25-4.25A4.25 4.25 0 0 0 12 12Zm0 2c-4.02 0-7 2.13-7 5v1h14v-1c0-2.87-2.98-5-7-5Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  {accountOpen && (
+                    <div className={styles.accountMenu} role="menu" aria-label="Account">
+                      <p className={styles.accountTitle}>Account</p>
+                      <Link to="/login/customer" role="menuitem" onClick={() => setAccountOpen(false)}>
+                        Customer login
+                      </Link>
+                      <Link to="/login/cleaner" role="menuitem" onClick={() => setAccountOpen(false)}>
+                        Cleaner login
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </nav>

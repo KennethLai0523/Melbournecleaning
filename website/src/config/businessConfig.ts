@@ -3,15 +3,7 @@
  * Edit contact details here only — do not hardcode them in components.
  */
 
-export const CONTACT_DETAILS = {
-  businessName: 'Melbourne Cleaning Group',
-  email: 'enquiry.melbourecleaning@gmail.com',
-  phoneDisplay: '0483 744 926',
-  phoneInternational: '+61483744926',
-  phoneInternationalDisplay: '+61 483 744 926',
-  whatsappNumber: '61483744926',
-  whatsappUrl: 'https://wa.me/61483744926',
-} as const;
+import { CONTACT_DETAILS } from './contact';
 
 export const businessConfig = {
   name: CONTACT_DETAILS.businessName,
@@ -23,11 +15,11 @@ export const businessConfig = {
     display: CONTACT_DETAILS.phoneDisplay,
     tel: `tel:${CONTACT_DETAILS.phoneInternational}`,
     raw: CONTACT_DETAILS.phoneInternational,
-    internationalDisplay: CONTACT_DETAILS.phoneInternationalDisplay,
+    internationalDisplay: '+61 483 744 926',
   },
 
   whatsapp: {
-    number: CONTACT_DETAILS.whatsappNumber,
+    number: '61483744926',
     baseUrl: CONTACT_DETAILS.whatsappUrl,
     defaultMessage:
       'Hi Melbourne Cleaning Group, I would like to request a cleaning quote.',
@@ -90,7 +82,7 @@ export const businessConfig = {
     secondaryText: '#5F6368',
   },
 
-  siteUrl: 'https://www.melbournecleaning.co',
+  siteUrl: CONTACT_DETAILS.websiteUrl,
 } as const;
 
 export type BusinessConfig = typeof businessConfig;
