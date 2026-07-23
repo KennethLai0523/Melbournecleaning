@@ -5,6 +5,10 @@ import { CTASection } from '../sections/CTASection';
 import { getPublicServices } from '../data/services';
 import { seoConfig } from '../config/seoConfig';
 import styles from './ServicesPage.module.css';
+import comparison1 from '../../images/comparison1.jpeg';
+import comparison2 from '../../images/comparison2.jpeg';
+import comparison3 from '../../images/comparison3.jpeg';
+import comparison4 from '../../images/comparison4.jpeg';
 
 const cleaningEquipment = [
   'Mops and buckets',
@@ -17,6 +21,13 @@ const cleaningEquipment = [
   'Disinfectants and detergents',
   'Gloves and protective gear',
   'Extension dusters',
+];
+
+const cleaningComparisons = [
+  { image: comparison1, title: 'Kitchen cooktop' },
+  { image: comparison2, title: 'Bathroom vanity' },
+  { image: comparison3, title: 'Shower' },
+  { image: comparison4, title: 'Toilet' },
 ];
 
 export default function ServicesPage() {
@@ -59,6 +70,35 @@ export default function ServicesPage() {
           <div className="grid-3">
             {publicServices.map((service) => (
               <ServiceCard key={service.id} service={service} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section
+        className={`section ${styles.comparisonSection}`}
+        aria-labelledby="comparison-heading"
+      >
+        <div className="container">
+          <div className={styles.comparisonHeader}>
+            <p className={styles.comparisonEyebrow}>Real cleaning results</p>
+            <h2 id="comparison-heading">Cleaning Comparison</h2>
+            <p>See the difference a detailed clean can make across kitchens and bathrooms.</p>
+          </div>
+          <div className={styles.comparisonGrid}>
+            {cleaningComparisons.map((comparison) => (
+              <figure key={comparison.title} className={styles.comparisonCard}>
+                <div className={styles.comparisonImageWrap}>
+                  <img
+                    src={comparison.image}
+                    alt={`Before and after cleaning comparison for ${comparison.title.toLowerCase()}`}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span className={styles.comparisonBadge}>Before &amp; after</span>
+                </div>
+                <figcaption>{comparison.title}</figcaption>
+              </figure>
             ))}
           </div>
         </div>

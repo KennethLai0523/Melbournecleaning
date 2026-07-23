@@ -44,9 +44,93 @@
   background: var(--color-primary);
 }
 
+.comparisonSection {
+  background:
+    radial-gradient(circle at 12% 10%, rgb(200 16 46 / 8%), transparent 34%),
+    var(--color-background-soft, #f8f8f8);
+}
+
+.comparisonHeader {
+  max-width: 680px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.comparisonHeader h2 {
+  margin: 0 0 0.65rem;
+}
+
+.comparisonHeader > p:last-child {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.comparisonEyebrow {
+  margin: 0 0 0.45rem;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.comparisonGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.comparisonCard {
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 1rem);
+  background: var(--color-white, #fff);
+  box-shadow: var(--shadow-sm);
+}
+
+.comparisonImageWrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 4.25;
+  background: #ececec;
+}
+
+.comparisonImageWrap img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.comparisonBadge {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  padding: 0.42rem 0.7rem;
+  border-radius: 999px;
+  background: rgb(22 24 29 / 82%);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(6px);
+}
+
+.comparisonCard figcaption {
+  padding: 1rem 1.1rem 1.1rem;
+  color: var(--color-charcoal);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
 @media (min-width: 600px) {
   .equipmentList {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .comparisonGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
