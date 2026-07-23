@@ -86,6 +86,7 @@ export default function AccountScreen() {
         <View style={styles.headingCopy}>
           <Text style={styles.title}>{profile.name}</Text>
           <Text style={styles.role}>{profile.role === 'customer' ? 'Customer account' : 'Cleaner account'}</Text>
+          <Text style={styles.photoHint}>Tap photo to change</Text>
         </View>
       </View>
 
@@ -180,6 +181,7 @@ const styles = StyleSheet.create({
   largeAvatarImage: { borderRadius: 30, height: 60, width: 60 },
   title: { color: colors.text, fontSize: 27, fontWeight: '800' },
   role: { color: colors.primary, fontSize: 14, fontWeight: '700', marginTop: 3 },
+  photoHint: { color: colors.textMuted, fontSize: 12, marginTop: 3 },
   subtitle: { color: colors.textMuted, fontSize: 15, lineHeight: 22, textAlign: 'center' },
   card: { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: 18, borderWidth: 1, gap: 7, padding: 18 },
   cardTitle: { color: colors.text, fontSize: 18, fontWeight: '800', marginBottom: 5 },
