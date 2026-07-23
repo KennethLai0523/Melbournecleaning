@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useAuth } from '../../src/auth/AuthContext';
+import { formatCurrency } from '../../src/data/quote';
 import { colors } from '../../src/theme';
 
 export default function AccountScreen() {
-  const { profile, loading, openAuth, logout, deleteAccount } = useAuth();
+  const { profile, loading, openAuth, logout, deleteAccount, draft, jobs, cancelJob } = useAuth();
   const [confirmation, setConfirmation] = useState('');
 
   if (loading) {
@@ -42,6 +43,17 @@ export default function AccountScreen() {
     );
   };
 
+  const confirmCancellation = (jobId: string) => {
+    Alert.alert(
+      'Cancel this job?',
+      'A pending job can be cancelled before a cleaner accepts it.',
+      [
+        { text: 'Keep job', style: 'cancel' },
+        { text: 'Cancel job', style: 'destructive', onPress: () => void cancelJob(jobId) },
+      ],
+    );
+  };
+
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <View style={styles.headingRow}>
@@ -69,6 +81,48 @@ export default function AccountScreen() {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Cleaner workspace</Text>
           <Text style={styles.value}>Availability, assigned jobs and work history will appear here.</Text>
+        </View>
+      )}
+
+      {profile.role === 'customer' && draft && (
+        <View style={styles.card}>
+          <View style={styles.recordHeading}>
+            <Text style={styles.cardTitle}>Saved quote draft</Text>
+            <Text style={styles.draftBadge}>Draft</Text>
+          </View>
+          <Text style={styles.recordTotal}>{formatCurrency(draft.total)}</Text>
+          <Text style={styles.value}>Frequency: {draft.quote.frequency}</Text>
+          <Text style={styles.value}>
+            Schedule: {draft.quote.preferredDate || 'Not selected'} {draft.quote.preferredTime || ''}
+          </Text>
+          <Text style={styles.helper}>Saved {new Date(draft.updatedAt).toLocaleString('en-AU')}</Text>
+        </View>
+      )}
+
+      {profile.role === 'customer' && (
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Jobs</Text>
+          {jobs.length === 0 ? (
+            <Text style={styles.helper}>No jobs sent yet.</Text>
+          ) : (
+            jobs.map((job) => (
+              <View key={job.id} style={styles.jobRow}>
+                <View style={styles.recordHeading}>
+                  <Text style={styles.jobTitle}>{job.quote.preferredDate} at {job.quote.preferredTime}</Text>
+                  <Text style={[styles.statusBadge, job.status === 'cancelled' && styles.cancelledBadge]}>
+                    {job.status}
+                  </Text>
+                </View>
+                <Text style={styles.recordTotal}>{formatCurrency(job.total)}</Text>
+                <Text style={styles.helper}>{job.quote.frequency} cleaning · {Object.values(job.quote.items).filter((quantity) => quantity > 0).length} selected items</Text>
+                {job.status === 'pending' && (
+                  <TouchableOpacity style={styles.cancelButton} onPress={() => confirmCancellation(job.id)}>
+                    <Text style={styles.cancelButtonText}>Cancel job</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            ))
+          )}
         </View>
       )}
 
@@ -110,6 +164,15 @@ const styles = StyleSheet.create({
   label: { color: colors.textMuted, fontSize: 12, marginTop: 5, textTransform: 'uppercase' },
   value: { color: colors.text, fontSize: 15, lineHeight: 22 },
   helper: { color: colors.textMuted, fontSize: 13, lineHeight: 19 },
+  recordHeading: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
+  recordTotal: { color: colors.primary, fontSize: 22, fontWeight: '800' },
+  draftBadge: { backgroundColor: '#fff0d8', borderRadius: 999, color: '#8a5700', fontSize: 11, fontWeight: '800', overflow: 'hidden', paddingHorizontal: 9, paddingVertical: 5 },
+  jobRow: { borderTopColor: colors.border, borderTopWidth: 1, gap: 7, paddingTop: 14 },
+  jobTitle: { color: colors.text, flex: 1, fontSize: 14, fontWeight: '800' },
+  statusBadge: { backgroundColor: '#fff0d8', borderRadius: 999, color: '#8a5700', fontSize: 11, fontWeight: '800', overflow: 'hidden', paddingHorizontal: 9, paddingVertical: 5, textTransform: 'capitalize' },
+  cancelledBadge: { backgroundColor: '#eeeeee', color: colors.textMuted },
+  cancelButton: { alignItems: 'center', borderColor: '#b4232d', borderRadius: 10, borderWidth: 1, marginTop: 4, paddingVertical: 10 },
+  cancelButtonText: { color: '#b4232d', fontWeight: '800' },
   primaryButton: { backgroundColor: colors.primary, borderRadius: 14, paddingHorizontal: 24, paddingVertical: 15 },
   primaryText: { color: '#fff', fontSize: 16, fontWeight: '800' },
   secondaryButton: { alignItems: 'center', borderColor: colors.primary, borderRadius: 14, borderWidth: 1, paddingVertical: 14 },

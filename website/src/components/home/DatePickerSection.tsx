@@ -66,6 +66,11 @@ export function DatePickerSection({ preferredDate, preferredTime, onChange }: Da
         year: 'numeric',
       })
     : null;
+  const selectedDate = preferredDate ? new Date(`${preferredDate}T12:00:00`) : null;
+  const isWeekend = selectedDate ? selectedDate.getDay() === 0 || selectedDate.getDay() === 6 : false;
+  const availableStartTimes = isWeekend
+    ? START_TIME_OPTIONS.filter((time) => time <= '18:00')
+    : START_TIME_OPTIONS;
 
   const goPrev = () => {
     setViewMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
@@ -143,12 +148,16 @@ export function DatePickerSection({ preferredDate, preferredTime, onChange }: Da
                     day: 'numeric',
                     month: 'long',
                   })}
-                  onClick={() =>
+                  onClick={() => {
+                    const dayOfWeek = cell.date?.getDay();
+                    const weekend = dayOfWeek === 0 || dayOfWeek === 6;
+                    const existingTimeIsValid =
+                      preferredTime && (!weekend || preferredTime <= '18:00');
                     onChange({
                       preferredDate: key,
-                      preferredTime: preferredTime || '09:00',
-                    })
-                  }
+                      preferredTime: existingTimeIsValid ? preferredTime : '09:00',
+                    });
+                  }}
                 >
                   {cell.date.getDate()}
                 </button>
@@ -187,7 +196,7 @@ export function DatePickerSection({ preferredDate, preferredTime, onChange }: Da
               }
             >
               <option value="">Select a start time</option>
-              {START_TIME_OPTIONS.map((time) => (
+              {availableStartTimes.map((time) => (
                 <option key={time} value={time}>
                   {formatStartTimeLabel(time)}
                 </option>
@@ -196,7 +205,11 @@ export function DatePickerSection({ preferredDate, preferredTime, onChange }: Da
             {!preferredDate ? (
               <p className={styles.timeHintText}>Select a date first to choose a start time.</p>
             ) : (
-              <p className={styles.timeHintText}>Times available from 8:00 AM to 8:00 PM, every 30 minutes.</p>
+              <p className={styles.timeHintText}>
+                {isWeekend
+                  ? 'Weekend times are available from 8:00 AM to 6:00 PM, every 30 minutes.'
+                  : 'Weekday times are available from 8:00 AM to 8:00 PM, every 30 minutes.'}
+              </p>
             )}
           </div>
 

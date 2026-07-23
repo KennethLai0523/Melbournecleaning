@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { CONTACT_DETAILS } from '../../src/config/contact';
 import { colors } from '../../src/theme';
@@ -41,6 +41,21 @@ export default function HomeScreen() {
       <View style={styles.heroCard}>
         <Text style={styles.title}>Professional cleaning for Melbourne homes</Text>
         <Text style={styles.copy}>Serving Melbourne and surrounding suburbs.</Text>
+
+        <View style={styles.heroImageRow}>
+          <Image
+            source={require('../../assets/images/hero/hero1.jpeg')}
+            style={styles.heroImage}
+            resizeMode="cover"
+            accessibilityLabel="Melbourne Cleaning service"
+          />
+          <Image
+            source={require('../../assets/images/hero/hero2.jpeg')}
+            style={styles.heroImage}
+            resizeMode="cover"
+            accessibilityLabel="Melbourne Cleaning service"
+          />
+        </View>
 
         <View style={styles.actionRow}>
           <TouchableOpacity
@@ -103,6 +118,8 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 30, lineHeight: 36, fontWeight: '800', color: colors.text, marginBottom: 8 },
   copy: { color: colors.textMuted, fontSize: 16, lineHeight: 24, marginBottom: 16 },
+  heroImageRow: { flexDirection: 'row', gap: 10, marginBottom: 16 },
+  heroImage: { aspectRatio: 3 / 4, borderRadius: 14, flex: 1 },
   actionRow: { gap: 12 },
   button: {
     borderRadius: 14,

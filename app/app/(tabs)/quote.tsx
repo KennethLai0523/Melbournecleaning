@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useEffect, useMemo, useState } from 'react';
 import { openExternal } from '../../src/utils/links';
 import { CONTACT_DETAILS } from '../../src/config/contact';
@@ -14,11 +14,12 @@ import { buildQuoteMessage } from '../../src/utils/buildQuoteMessage';
 import { colors } from '../../src/theme';
 import { useAuth } from '../../src/auth/AuthContext';
 import { CleaningItemIcon } from '../../src/components/CleaningItemIcon';
+import { SchedulePicker } from '../../src/components/SchedulePicker';
 
 export default function QuoteScreen() {
   const [state, setState] = useState<QuoteState>(defaultQuoteState);
   const [showAll, setShowAll] = useState(false);
-  const { profile } = useAuth();
+  const { profile, openAuth, saveDraft, submitJob } = useAuth();
   const total = useMemo(() => calculateQuoteTotal(state.items), [state.items]);
   const visibleItems = useMemo(
     () => cleaningItems.filter((item) => showAll || item.defaultVisible || (state.items[item.id] ?? 0) > 0),
@@ -49,6 +50,38 @@ export default function QuoteScreen() {
     }));
   };
 
+  const requireCustomer = () => {
+    if (!profile) {
+      openAuth();
+      return false;
+    }
+    if (profile.role !== 'customer') {
+      Alert.alert('Customer account required', 'Log in with a customer account to save quotes or send jobs.');
+      return false;
+    }
+    return true;
+  };
+
+  const handleSaveDraft = async () => {
+    if (!requireCustomer()) return;
+    await saveDraft(state, total);
+    Alert.alert('Draft saved', 'Your quote draft is now available in your profile.');
+  };
+
+  const handleSendJob = async () => {
+    if (!requireCustomer()) return;
+    if (total <= 0) {
+      Alert.alert('Choose cleaning services', 'Add at least one cleaning item before sending a job.');
+      return;
+    }
+    if (!state.preferredDate || !state.preferredTime) {
+      Alert.alert('Choose a schedule', 'Select your preferred date and time before sending a job.');
+      return;
+    }
+    await submitJob(state, total);
+    Alert.alert('Job sent', 'Your job is pending and can be cancelled from your profile until accepted.');
+  };
+
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Quote</Text>
@@ -72,6 +105,16 @@ export default function QuoteScreen() {
             );
           })}
         </View>
+      </View>
+
+      <View style={styles.card}>
+        <SchedulePicker
+          preferredDate={state.preferredDate}
+          preferredTime={state.preferredTime}
+          onChange={(preferredDate, preferredTime) =>
+            setState((current) => ({ ...current, preferredDate, preferredTime }))
+          }
+        />
       </View>
 
       <View style={styles.card}>
@@ -122,6 +165,12 @@ export default function QuoteScreen() {
         <Text style={styles.summaryLine}>Frequency: {state.frequency}</Text>
         <Text style={styles.totalLabel}>Estimated total</Text>
         <Text style={styles.totalValue}>{formatCurrency(total)}</Text>
+        <TouchableOpacity style={[styles.button, styles.draftButton]} onPress={() => void handleSaveDraft()}>
+          <Text style={styles.draftButtonText}>Save Draft Quote</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, styles.jobButton]} onPress={() => void handleSendJob()}>
+          <Text style={styles.primaryButtonText}>Send Job</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.primaryButton, total <= 0 && styles.buttonDisabled]}
           disabled={total <= 0}
@@ -219,6 +268,9 @@ const styles = StyleSheet.create({
   totalValue: { color: colors.primary, fontSize: 30, fontWeight: '800', marginTop: 4, marginBottom: 14 },
   button: { borderRadius: 14, paddingVertical: 14, alignItems: 'center' },
   primaryButton: { backgroundColor: colors.whatsapp },
+  jobButton: { backgroundColor: colors.primary, marginBottom: 10 },
+  draftButton: { backgroundColor: '#fff', borderColor: colors.primary, borderWidth: 1, marginBottom: 10 },
+  draftButtonText: { color: colors.primary, fontSize: 16, fontWeight: '800' },
   primaryButtonText: { color: '#fff', fontWeight: '800', fontSize: 16 },
   buttonDisabled: { opacity: 0.55 },
   moreButton: { alignItems: 'center', borderColor: colors.primary, borderRadius: 12, borderWidth: 1, marginTop: 16, paddingVertical: 12 },

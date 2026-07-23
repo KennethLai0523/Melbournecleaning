@@ -19,6 +19,8 @@ export function buildQuoteMessage(state: QuoteState): string {
     `Living rooms: ${state.livingRooms}`,
     `Kitchens: ${state.kitchens}`,
     `Frequency: ${state.frequency}`,
+    `Preferred date: ${state.preferredDate || 'Not selected'}`,
+    `Preferred time: ${state.preferredTime || 'Not selected'}`,
     '',
     'Cleaning details:',
   ];

@@ -77,6 +77,8 @@ export interface QuoteState {
   livingRooms: number;
   kitchens: number;
   frequency: Frequency;
+  preferredDate: string;
+  preferredTime: string;
   items: Record<string, number>;
 }
 
@@ -88,6 +90,8 @@ export const defaultQuoteState: QuoteState = {
   livingRooms: 1,
   kitchens: 1,
   frequency: 'one-off',
+  preferredDate: '',
+  preferredTime: '',
   items: {},
 };
 
