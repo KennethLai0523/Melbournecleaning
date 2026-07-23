@@ -9,6 +9,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   onSnapshot,
   query,
@@ -66,7 +67,7 @@ interface AuthContextValue {
   openAuth: () => void;
   closeAuth: () => void;
   register: (profile: Omit<AccountProfile, 'id' | 'joinedAt'>, password: string) => Promise<void>;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   deleteAccount: () => Promise<void>;
   saveDraft: (quote: QuoteState, total: number) => Promise<void>;
@@ -138,18 +139,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     closeAuth: () => setAuthVisible(false),
     register: async (details, password) => {
       const credential = await createUserWithEmailAndPassword(auth, details.email, password);
-      const account = { ...details, joinedAt: new Date().toISOString() };
-      await setDoc(doc(db, 'users', credential.user.uid), account);
-      setAuthVisible(false);
+      try {
+        const account = {
+          role: details.role,
+          name: details.name,
+          email: details.email,
+          phone: details.phone,
+          joinedAt: new Date().toISOString(),
+          ...(details.avatarUri ? { avatarUri: details.avatarUri } : {}),
+          ...(details.property ? { property: details.property } : {}),
+        };
+        await setDoc(doc(db, 'users', credential.user.uid), account);
+        setAuthVisible(false);
+      } catch (error) {
+        await deleteUser(credential.user).catch(() => undefined);
+        throw error;
+      }
     },
     login: async (email, password) => {
-      try {
-        await signInWithEmailAndPassword(auth, email.trim(), password);
-        setAuthVisible(false);
-        return true;
-      } catch {
-        return false;
+      const credential = await signInWithEmailAndPassword(auth, email.trim(), password);
+      const profileSnapshot = await getDoc(doc(db, 'users', credential.user.uid));
+      if (!profileSnapshot.exists()) {
+        await signOut(auth);
+        throw new Error('auth/profile-not-found');
       }
+      setAuthVisible(false);
     },
     logout: () => signOut(auth),
     deleteAccount: async () => {

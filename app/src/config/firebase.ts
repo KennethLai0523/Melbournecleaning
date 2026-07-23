@@ -3,7 +3,7 @@ import { getApp, getApps, initializeApp } from 'firebase/app';
 // Firebase's React Native runtime exports this helper, but its default web type entry omits it.
 // @ts-expect-error React Native-specific Firebase Auth export
 import { getAuth, getReactNativePersistence, initializeAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, initializeFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -27,5 +27,13 @@ export const auth = (() => {
   }
 })();
 
-export const db = getFirestore(firebaseApp);
+export const db = (() => {
+  try {
+    return initializeFirestore(firebaseApp, {
+      experimentalAutoDetectLongPolling: true,
+    });
+  } catch {
+    return getFirestore(firebaseApp);
+  }
+})();
 export const storage = getStorage(firebaseApp);

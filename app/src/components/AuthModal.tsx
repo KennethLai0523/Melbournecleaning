@@ -24,6 +24,27 @@ const defaultProperty: PropertyProfile = {
   kitchens: 1,
 };
 
+function getAuthErrorMessage(error: unknown) {
+  const code = typeof error === 'object' && error && 'code' in error
+    ? String(error.code)
+    : error instanceof Error
+      ? error.message
+      : '';
+  if (code.includes('email-already-in-use')) return 'This email already has an account. Choose Log in instead.';
+  if (code.includes('invalid-email')) return 'Enter a valid email address.';
+  if (code.includes('weak-password')) return 'Use a password with at least 6 characters.';
+  if (code.includes('password-does-not-meet-requirements')) return 'Use a stronger password with letters, numbers and at least 6 characters.';
+  if (code.includes('invalid-credential')) return 'The email or password is incorrect.';
+  if (code.includes('operation-not-allowed')) return 'Email and password sign-in is not enabled in Firebase.';
+  if (code.includes('permission-denied')) return 'Firebase denied access while saving the account profile.';
+  if (code.includes('unavailable')) return 'Firebase is temporarily unavailable. Check your connection and try again.';
+  if (code.includes('failed-precondition')) return 'Firebase is not fully ready for this account request.';
+  if (code.includes('too-many-requests')) return 'Too many attempts. Wait a moment and try again.';
+  if (code.includes('network-request-failed')) return 'Check your internet connection and try again.';
+  if (code.includes('profile-not-found')) return 'This account is incomplete. Please contact support or register with a different email.';
+  return `Firebase could not complete this request${code ? ` (${code})` : ''}. Please try again.`;
+}
+
 function NumberField({
   label,
   value,
@@ -66,14 +87,20 @@ export function AuthModal() {
     }
 
     if (mode === 'login') {
-      if (!(await login(email, password))) {
-        Alert.alert('Unable to log in', 'Check your email and password, then try again.');
+      try {
+        await login(email, password);
+      } catch (error) {
+        Alert.alert('Unable to log in', getAuthErrorMessage(error));
       }
       return;
     }
 
     if (!name.trim() || !phone.trim()) {
       Alert.alert('Missing details', 'Enter your name, phone number, email and password.');
+      return;
+    }
+    if (password.length < 6) {
+      Alert.alert('Password too short', 'Use a password with at least 6 characters.');
       return;
     }
     if (role === 'customer' && !property.address.trim()) {
@@ -89,8 +116,8 @@ export function AuthModal() {
         phone: phone.trim(),
         property: role === 'customer' ? property : undefined,
       }, password);
-    } catch {
-      Alert.alert('Unable to create account', 'Check the details or use a different email address.');
+    } catch (error) {
+      Alert.alert('Unable to create account', getAuthErrorMessage(error));
     }
   };
 
