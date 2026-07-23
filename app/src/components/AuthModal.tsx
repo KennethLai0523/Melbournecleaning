@@ -120,19 +120,19 @@ export function AuthModal() {
                   </TouchableOpacity>
                 ))}
               </View>
-              <TextInput style={styles.input} placeholder="Full name" value={name} onChangeText={setName} />
-              <TextInput style={styles.input} placeholder="Phone number" keyboardType="phone-pad" value={phone} onChangeText={setPhone} />
+              <TextInput style={styles.input} placeholder="Full name" placeholderTextColor={colors.textMuted} value={name} onChangeText={setName} />
+              <TextInput style={styles.input} placeholder="Phone number" placeholderTextColor={colors.textMuted} keyboardType="phone-pad" value={phone} onChangeText={setPhone} />
             </>
           )}
 
-          <TextInput style={styles.input} placeholder="Email address" autoCapitalize="none" keyboardType="email-address" value={email} onChangeText={setEmail} />
-          <TextInput style={styles.input} placeholder="Password" secureTextEntry value={password} onChangeText={setPassword} />
+          <TextInput style={styles.input} placeholder="Email address" placeholderTextColor={colors.textMuted} autoCapitalize="none" keyboardType="email-address" value={email} onChangeText={setEmail} />
+          <TextInput style={styles.input} placeholder="Password" placeholderTextColor={colors.textMuted} secureTextEntry value={password} onChangeText={setPassword} />
 
           {mode === 'register' && role === 'customer' && (
             <View style={styles.propertyCard}>
               <Text style={styles.sectionTitle}>Property details</Text>
               <Text style={styles.propertyHint}>Saved to your profile and prefilled in every quote.</Text>
-              <TextInput style={styles.input} placeholder="Property address" value={property.address} onChangeText={(address) => setProperty((current) => ({ ...current, address }))} />
+              <TextInput style={styles.input} placeholder="Property address" placeholderTextColor={colors.textMuted} value={property.address} onChangeText={(address) => setProperty((current) => ({ ...current, address }))} />
               <View style={styles.chips}>
                 {(['apartment', 'unit', 'townhouse', 'house', 'studio'] as const).map((type) => (
                   <TouchableOpacity key={type} style={[styles.chip, property.propertyType === type && styles.chipActive]} onPress={() => setProperty((current) => ({ ...current, propertyType: type }))}>

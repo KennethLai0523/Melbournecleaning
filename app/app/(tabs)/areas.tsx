@@ -37,7 +37,7 @@ export default function AreasScreen() {
       <View style={styles.checkCard}>
         <Text style={styles.cardTitle}>Check Your Suburb</Text>
         <Text style={styles.body}>Enter your suburb to enquire about service availability via WhatsApp.</Text>
-        <TextInput style={styles.input} placeholder="e.g. South Yarra" value={suburb} onChangeText={setSuburb} />
+        <TextInput style={styles.input} placeholder="e.g. South Yarra" placeholderTextColor={colors.textMuted} value={suburb} onChangeText={setSuburb} />
         <TouchableOpacity style={[styles.button, !suburb.trim() && styles.disabled]} disabled={!suburb.trim()} onPress={checkSuburb}>
           <Text style={styles.buttonText}>Check via WhatsApp</Text>
         </TouchableOpacity>
