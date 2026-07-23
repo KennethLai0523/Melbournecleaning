@@ -1,5 +1,16 @@
+import { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '../../src/config/firebase';
 import { colors } from '../../src/theme';
+
+interface PublicCleaner {
+  id: string;
+  name: string;
+  serviceArea: string;
+  gender: string;
+  avatarUri?: string | null;
+}
 
 const cleaningEquipment = [
   'Mops and buckets',
@@ -45,6 +56,24 @@ const comparisons = [
 ];
 
 export default function ServicesScreen() {
+  const [cleaners, setCleaners] = useState<PublicCleaner[]>([]);
+  const [cleanersLoading, setCleanersLoading] = useState(true);
+
+  useEffect(() => onSnapshot(
+    collection(db, 'cleaners'),
+    (snapshot) => {
+      setCleaners(snapshot.docs
+        .map((record) => ({ id: record.id, ...record.data() } as PublicCleaner))
+        .filter((cleaner) => Boolean(cleaner.name))
+        .sort((a, b) => a.name.localeCompare(b.name)));
+      setCleanersLoading(false);
+    },
+    (error) => {
+      console.warn('Unable to load cleaner profiles', error);
+      setCleanersLoading(false);
+    },
+  ), []);
+
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Our Cleaning Services</Text>
@@ -97,6 +126,40 @@ export default function ServicesScreen() {
           </View>
         ))}
       </View>
+
+      <View style={styles.cleanerSection}>
+        <Text style={styles.eyebrow}>Meet the team</Text>
+        <Text style={styles.comparisonTitle}>Cleaners profile</Text>
+        <Text style={styles.comparisonCopy}>Registered cleaners available across Melbourne.</Text>
+        {cleanersLoading ? (
+          <View style={styles.emptyCleanerCard}>
+            <Text style={styles.cardBody}>Loading cleaner profiles...</Text>
+          </View>
+        ) : !cleaners.length ? (
+          <View style={styles.emptyCleanerCard}>
+            <Text style={styles.cardBody}>No cleaner profiles are available yet.</Text>
+          </View>
+        ) : (
+          <View style={styles.cleanerGrid}>
+            {cleaners.map((cleaner) => (
+              <View key={cleaner.id} style={styles.cleanerCard}>
+                {cleaner.avatarUri ? (
+                  <Image source={{ uri: cleaner.avatarUri }} style={styles.cleanerAvatar} />
+                ) : (
+                  <View style={styles.cleanerAvatarFallback}>
+                    <Text style={styles.cleanerInitial}>{cleaner.name.slice(0, 1).toUpperCase()}</Text>
+                  </View>
+                )}
+                <View style={styles.cleanerCopy}>
+                  <Text style={styles.cleanerName}>{cleaner.name}</Text>
+                  <Text style={styles.cleanerMeta}>Based in {cleaner.serviceArea || 'Area not added yet'}</Text>
+                  <Text style={styles.cleanerMeta}>{cleaner.gender || 'Prefer not to say'}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
+      </View>
     </ScrollView>
   );
 }
@@ -127,4 +190,14 @@ const styles = StyleSheet.create({
   badge: { backgroundColor: 'rgba(22,24,29,0.82)', borderRadius: 999, left: 7, paddingHorizontal: 7, paddingVertical: 4, position: 'absolute', top: 7 },
   badgeText: { color: '#fff', fontSize: 9, fontWeight: '800' },
   comparisonLabel: { color: colors.text, fontSize: 14, fontWeight: '800', paddingHorizontal: 11, paddingVertical: 10 },
+  cleanerSection: { borderTopColor: colors.border, borderTopWidth: 1, marginTop: 8, paddingTop: 22 },
+  cleanerGrid: { gap: 12, marginTop: 16 },
+  cleanerCard: { alignItems: 'center', backgroundColor: '#fff', borderColor: colors.border, borderRadius: 16, borderWidth: 1, flexDirection: 'row', gap: 14, padding: 14 },
+  cleanerAvatar: { borderRadius: 28, height: 56, width: 56 },
+  cleanerAvatarFallback: { alignItems: 'center', backgroundColor: colors.primary, borderRadius: 28, height: 56, justifyContent: 'center', width: 56 },
+  cleanerInitial: { color: '#fff', fontSize: 21, fontWeight: '800' },
+  cleanerCopy: { flex: 1 },
+  cleanerName: { color: colors.text, fontSize: 17, fontWeight: '800' },
+  cleanerMeta: { color: colors.textMuted, fontSize: 13, lineHeight: 19, marginTop: 2 },
+  emptyCleanerCard: { backgroundColor: colors.surfaceMuted, borderRadius: 14, marginTop: 14, padding: 16 },
 });

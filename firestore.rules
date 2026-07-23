@@ -19,6 +19,13 @@ service cloud.firestore {
       allow read, write: if signedIn() && request.auth.uid == userId;
     }
 
+    match /cleaners/{cleanerId} {
+      allow read: if true;
+      allow create, update, delete: if signedIn()
+        && request.auth.uid == cleanerId
+        && userRole() == 'cleaner';
+    }
+
     match /jobs/{jobId} {
       allow create: if signedIn()
         && userRole() == 'customer'

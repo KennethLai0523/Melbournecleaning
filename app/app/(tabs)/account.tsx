@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
-import { useAuth } from '../../src/auth/AuthContext';
+import { type CleanerGender, useAuth } from '../../src/auth/AuthContext';
 import { cleaningItems, formatCurrency, type QuoteState } from '../../src/data/quote';
 import { colors } from '../../src/theme';
 
@@ -23,10 +23,13 @@ function QuoteDetails({ quote }: { quote: QuoteState }) {
 
 export default function AccountScreen() {
   const router = useRouter();
-  const { profile, loading, openAuth, deleteAccount, draft, jobs, cancelJob, submitJob, updatePropertyAddress, updateAvatar } = useAuth();
+  const { profile, loading, openAuth, deleteAccount, draft, jobs, cancelJob, submitJob, updatePropertyAddress, updateAvatar, updateCleanerProfile } = useAuth();
   const [confirmation, setConfirmation] = useState('');
   const [editingAddress, setEditingAddress] = useState(false);
   const [address, setAddress] = useState('');
+  const [editingCleaner, setEditingCleaner] = useState(false);
+  const [serviceArea, setServiceArea] = useState('');
+  const [gender, setGender] = useState<CleanerGender>('Prefer not to say');
 
   if (loading) return <View style={styles.center}><Text style={styles.subtitle}>Loading account…</Text></View>;
   if (!profile) {
@@ -119,15 +122,55 @@ export default function AccountScreen() {
           <Text style={styles.helper}>This address is automatically used with your quotes and jobs.</Text>
         </View>
       ) : (
-        <View style={styles.card}>
-          <View style={styles.recordHeading}>
-            <Text style={styles.cardTitle}>Job Market</Text>
-            <TouchableOpacity onPress={() => router.push('/job-market')}>
-              <Text style={styles.editLink}>Browse jobs</Text>
-            </TouchableOpacity>
+        <>
+          <View style={styles.card}>
+            <View style={styles.recordHeading}>
+              <Text style={styles.cardTitle}>Cleaner profile</Text>
+              {!editingCleaner && (
+                <TouchableOpacity onPress={() => {
+                  setServiceArea(profile.serviceArea ?? '');
+                  setGender(profile.gender ?? 'Prefer not to say');
+                  setEditingCleaner(true);
+                }}><Text style={styles.editLink}>Edit</Text></TouchableOpacity>
+              )}
+            </View>
+            {editingCleaner ? (
+              <>
+                <TextInput style={styles.input} placeholder="Area based, e.g. Burwood" placeholderTextColor="#6b6f76" value={serviceArea} onChangeText={setServiceArea} />
+                <Text style={styles.label}>Gender</Text>
+                <View style={styles.optionWrap}>
+                  {(['Female', 'Male', 'Prefer not to say'] as CleanerGender[]).map((option) => (
+                    <TouchableOpacity key={option} style={[styles.optionChip, gender === option && styles.optionChipActive]} onPress={() => setGender(option)}>
+                      <Text style={[styles.optionText, gender === option && styles.optionTextActive]}>{option}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                <View style={styles.inlineActions}>
+                  <TouchableOpacity style={styles.smallPrimaryButton} onPress={() => {
+                    if (!serviceArea.trim()) return Alert.alert('Area required', 'Enter the Melbourne area where you are based.');
+                    void updateCleanerProfile(serviceArea.trim(), gender).then(() => setEditingCleaner(false));
+                  }}><Text style={styles.smallPrimaryText}>Save profile</Text></TouchableOpacity>
+                  <TouchableOpacity style={styles.smallOutlineButton} onPress={() => setEditingCleaner(false)}><Text style={styles.editLink}>Cancel</Text></TouchableOpacity>
+                </View>
+              </>
+            ) : (
+              <>
+                <Text style={styles.label}>Area based</Text>
+                <Text style={styles.value}>{profile.serviceArea || 'Not added yet'}</Text>
+                <Text style={styles.label}>Gender</Text>
+                <Text style={styles.value}>{profile.gender || 'Not added yet'}</Text>
+              </>
+            )}
+            <Text style={styles.helper}>These details appear publicly in the Services tab.</Text>
           </View>
-          <Text style={styles.helper}>Browse available customer cleaning jobs on a separate page.</Text>
-        </View>
+          <View style={styles.card}>
+            <View style={styles.recordHeading}>
+              <Text style={styles.cardTitle}>Job Market</Text>
+              <TouchableOpacity onPress={() => router.push('/job-market')}><Text style={styles.editLink}>Browse jobs</Text></TouchableOpacity>
+            </View>
+            <Text style={styles.helper}>Browse available customer cleaning jobs on a separate page.</Text>
+          </View>
+        </>
       )}
 
       {profile.role === 'customer' && draft && (
@@ -219,6 +262,11 @@ const styles = StyleSheet.create({
   dangerCard: { backgroundColor: '#fff6f6', borderColor: '#f0b8b8', borderRadius: 18, borderWidth: 1, gap: 12, padding: 18 },
   dangerTitle: { color: '#9f1420', fontSize: 18, fontWeight: '800' },
   input: { backgroundColor: '#fff', borderColor: colors.border, borderRadius: 12, borderWidth: 1, color: colors.text, fontSize: 16, paddingHorizontal: 14, paddingVertical: 13 },
+  optionWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  optionChip: { backgroundColor: colors.surfaceMuted, borderColor: colors.border, borderRadius: 999, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8 },
+  optionChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+  optionText: { color: colors.text, fontSize: 13 },
+  optionTextActive: { color: '#fff', fontWeight: '800' },
   deleteButton: { alignItems: 'center', backgroundColor: '#b4232d', borderRadius: 12, paddingVertical: 14 },
   deleteText: { color: '#fff', fontWeight: '800' },
   disabled: { opacity: 0.45 },

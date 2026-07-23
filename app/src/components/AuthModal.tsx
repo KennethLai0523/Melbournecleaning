@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { type AccountRole, type PropertyProfile, useAuth } from '../auth/AuthContext';
+import { type AccountRole, type CleanerGender, type PropertyProfile, useAuth } from '../auth/AuthContext';
 import { colors } from '../theme';
 
 const defaultProperty: PropertyProfile = {
@@ -79,6 +79,8 @@ export function AuthModal() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [property, setProperty] = useState(defaultProperty);
+  const [serviceArea, setServiceArea] = useState('');
+  const [gender, setGender] = useState<CleanerGender>('Prefer not to say');
 
   const submit = async () => {
     if (!email.trim() || !password.trim()) {
@@ -107,6 +109,10 @@ export function AuthModal() {
       Alert.alert('Property required', 'Enter the property address used for quotes.');
       return;
     }
+    if (role === 'cleaner' && !serviceArea.trim()) {
+      Alert.alert('Area required', 'Enter the Melbourne area where you are based.');
+      return;
+    }
 
     try {
       await register({
@@ -115,6 +121,8 @@ export function AuthModal() {
         email: email.trim(),
         phone: phone.trim(),
         property: role === 'customer' ? property : undefined,
+        serviceArea: role === 'cleaner' ? serviceArea.trim() : undefined,
+        gender: role === 'cleaner' ? gender : undefined,
       }, password);
     } catch (error) {
       Alert.alert('Unable to create account', getAuthErrorMessage(error));
@@ -174,6 +182,28 @@ export function AuthModal() {
               {(['bedrooms', 'bathrooms', 'toilets', 'livingRooms', 'kitchens'] as const).map((key) => (
                 <NumberField key={key} label={key === 'livingRooms' ? 'Living rooms' : key[0].toUpperCase() + key.slice(1)} value={property[key]} onChange={(value) => setProperty((current) => ({ ...current, [key]: value }))} />
               ))}
+            </View>
+          )}
+
+          {mode === 'register' && role === 'cleaner' && (
+            <View style={styles.propertyCard}>
+              <Text style={styles.sectionTitle}>Cleaner profile</Text>
+              <Text style={styles.propertyHint}>These details will appear publicly in the Cleaners profile section.</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Area based, e.g. Burwood"
+                placeholderTextColor={colors.textMuted}
+                value={serviceArea}
+                onChangeText={setServiceArea}
+              />
+              <Text style={styles.label}>Gender</Text>
+              <View style={styles.chips}>
+                {(['Female', 'Male', 'Prefer not to say'] as CleanerGender[]).map((option) => (
+                  <TouchableOpacity key={option} style={[styles.chip, gender === option && styles.chipActive]} onPress={() => setGender(option)}>
+                    <Text style={[styles.chipText, gender === option && styles.chipTextActive]}>{option}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
           )}
 

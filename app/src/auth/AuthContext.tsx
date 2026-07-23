@@ -23,6 +23,7 @@ import { auth, db, storage } from '../config/firebase';
 import type { QuoteState } from '../data/quote';
 
 export type AccountRole = 'customer' | 'cleaner';
+export type CleanerGender = 'Female' | 'Male' | 'Prefer not to say';
 
 export interface PropertyProfile {
   address: string;
@@ -43,6 +44,8 @@ export interface AccountProfile {
   phone: string;
   avatarUri?: string;
   property?: PropertyProfile;
+  serviceArea?: string;
+  gender?: CleanerGender;
 }
 
 export interface QuoteRecord {
@@ -77,6 +80,7 @@ interface AuthContextValue {
   updateJob: (jobId: string, quote: QuoteState, total: number) => Promise<void>;
   updateAvatar: (avatarUri: string) => Promise<void>;
   acceptJob: (jobId: string) => Promise<void>;
+  updateCleanerProfile: (serviceArea: string, gender: CleanerGender) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -129,6 +133,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   }, [profile]);
 
+  useEffect(() => {
+    if (!profile || profile.role !== 'cleaner') return;
+
+    void setDoc(doc(db, 'cleaners', profile.id), {
+      name: profile.name,
+      serviceArea: profile.serviceArea?.trim() || 'Area not added yet',
+      gender: profile.gender || 'Prefer not to say',
+      avatarUri: profile.avatarUri ?? null,
+    }, { merge: true }).catch((error) => {
+      console.warn('Unable to sync public cleaner profile', error);
+    });
+  }, [
+    profile?.avatarUri,
+    profile?.gender,
+    profile?.id,
+    profile?.name,
+    profile?.role,
+    profile?.serviceArea,
+  ]);
+
   const value = useMemo<AuthContextValue>(() => ({
     profile,
     loading,
@@ -148,10 +172,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           joinedAt: new Date().toISOString(),
           ...(details.avatarUri ? { avatarUri: details.avatarUri } : {}),
           ...(details.property ? { property: details.property } : {}),
+          ...(details.serviceArea ? { serviceArea: details.serviceArea } : {}),
+          ...(details.gender ? { gender: details.gender } : {}),
         };
         await setDoc(doc(db, 'users', credential.user.uid), account);
+        if (details.role === 'cleaner' && details.serviceArea && details.gender) {
+          await setDoc(doc(db, 'cleaners', credential.user.uid), {
+            name: details.name,
+            serviceArea: details.serviceArea,
+            gender: details.gender,
+            avatarUri: details.avatarUri ?? null,
+          });
+        }
         setAuthVisible(false);
       } catch (error) {
+        await deleteDoc(doc(db, 'cleaners', credential.user.uid)).catch(() => undefined);
+        await deleteDoc(doc(db, 'users', credential.user.uid)).catch(() => undefined);
         await deleteUser(credential.user).catch(() => undefined);
         throw error;
       }
@@ -174,6 +210,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await Promise.all([
         deleteDoc(doc(db, 'drafts', user.uid)),
         deleteDoc(doc(db, 'users', user.uid)),
+        deleteDoc(doc(db, 'cleaners', user.uid)),
         deleteObject(ref(storage, `avatars/${user.uid}`)).catch(() => undefined),
       ]);
       await deleteUser(user);
@@ -212,11 +249,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await uploadBytes(avatarRef, blob, { contentType: blob.type || 'image/jpeg' });
       const downloadUrl = await getDownloadURL(avatarRef);
       await updateDoc(doc(db, 'users', user.uid), { avatarUri: downloadUrl });
+      if (profile?.role === 'cleaner') {
+        await setDoc(doc(db, 'cleaners', user.uid), {
+          name: profile.name,
+          serviceArea: profile.serviceArea ?? 'Not specified',
+          gender: profile.gender ?? 'Prefer not to say',
+          avatarUri: downloadUrl,
+        }, { merge: true });
+      }
     },
     acceptJob: async (jobId) => {
       const user = auth.currentUser;
       if (!user) return;
       await updateDoc(doc(db, 'jobs', jobId), { status: 'accepted', acceptedBy: user.uid, updatedAt: new Date().toISOString() });
+    },
+    updateCleanerProfile: async (serviceArea, gender) => {
+      const user = auth.currentUser;
+      if (!user || profile?.role !== 'cleaner') return;
+      await Promise.all([
+        updateDoc(doc(db, 'users', user.uid), { serviceArea, gender }),
+        setDoc(doc(db, 'cleaners', user.uid), {
+          name: profile.name,
+          serviceArea,
+          gender,
+          avatarUri: profile.avatarUri ?? null,
+        }),
+      ]);
     },
   }), [authVisible, draft, jobs, loading, profile]);
 
