@@ -86,7 +86,11 @@ export default function ServicesScreen() {
         {comparisons.map((comparison) => (
           <View key={comparison.title} style={styles.comparisonCard}>
             <View>
-              <Image source={comparison.source} style={styles.comparisonImage} resizeMode="cover" />
+              <Image
+                source={comparison.source}
+                style={styles.comparisonImage}
+                resizeMode="contain"
+              />
               <View style={styles.badge}><Text style={styles.badgeText}>Before &amp; after</Text></View>
             </View>
             <Text style={styles.comparisonLabel}>{comparison.title}</Text>
@@ -117,10 +121,10 @@ const styles = StyleSheet.create({
   eyebrow: { color: colors.primary, fontSize: 12, fontWeight: '800', letterSpacing: 1.1, textTransform: 'uppercase' },
   comparisonTitle: { color: colors.text, fontSize: 24, fontWeight: '800', marginTop: 5 },
   comparisonCopy: { color: colors.textMuted, fontSize: 14, lineHeight: 20, marginTop: 7, textAlign: 'center' },
-  comparisonGrid: { gap: 14 },
-  comparisonCard: { backgroundColor: '#fff', borderColor: colors.border, borderRadius: 18, borderWidth: 1, overflow: 'hidden' },
-  comparisonImage: { aspectRatio: 1, width: '100%' },
-  badge: { backgroundColor: 'rgba(22,24,29,0.82)', borderRadius: 999, left: 12, paddingHorizontal: 10, paddingVertical: 6, position: 'absolute', top: 12 },
-  badgeText: { color: '#fff', fontSize: 12, fontWeight: '800' },
-  comparisonLabel: { color: colors.text, fontSize: 17, fontWeight: '800', padding: 16 },
+  comparisonGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  comparisonCard: { backgroundColor: '#fff', borderColor: colors.border, borderRadius: 14, borderWidth: 1, overflow: 'hidden', width: '48.5%' },
+  comparisonImage: { backgroundColor: '#f1f1f1', height: 170, width: '100%' },
+  badge: { backgroundColor: 'rgba(22,24,29,0.82)', borderRadius: 999, left: 7, paddingHorizontal: 7, paddingVertical: 4, position: 'absolute', top: 7 },
+  badgeText: { color: '#fff', fontSize: 9, fontWeight: '800' },
+  comparisonLabel: { color: colors.text, fontSize: 14, fontWeight: '800', paddingHorizontal: 11, paddingVertical: 10 },
 });

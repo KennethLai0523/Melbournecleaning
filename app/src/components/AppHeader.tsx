@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../auth/AuthContext';
@@ -8,10 +8,11 @@ import { colors } from '../theme';
 function LogoMark() {
   return (
     <View style={styles.logoMark}>
-      <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
-        <Path d="M4 11 12 4l8 7v9H4v-9Z" stroke="#fff" strokeWidth={2} strokeLinejoin="round" />
-        <Path d="M9 20v-6h6v6" stroke="#fff" strokeWidth={2} />
-      </Svg>
+      <Image
+        source={require('../../assets/images/icon.png')}
+        style={styles.logoImage}
+        resizeMode="contain"
+      />
     </View>
   );
 }
@@ -33,10 +34,7 @@ export function AppHeader() {
     <View style={[styles.header, { height: 64 + insets.top, paddingTop: insets.top }]}>
       <TouchableOpacity style={styles.brand} onPress={() => router.push('/')}>
         <LogoMark />
-        <View>
-          <Text style={styles.brandTitle}>Melbourne Cleaning</Text>
-          <Text style={styles.brandSubtitle}>Group</Text>
-        </View>
+        <Text style={styles.brandTitle}>Melbourne Cleaning</Text>
       </TouchableOpacity>
       <View style={styles.actions}>
         <TouchableOpacity
@@ -82,14 +80,14 @@ const styles = StyleSheet.create({
   brand: { alignItems: 'center', flexDirection: 'row', gap: 10 },
   logoMark: {
     alignItems: 'center',
-    backgroundColor: colors.primary,
     borderRadius: 11,
     height: 42,
     justifyContent: 'center',
+    overflow: 'hidden',
     width: 42,
   },
-  brandTitle: { color: colors.text, fontSize: 15, fontWeight: '800' },
-  brandSubtitle: { color: colors.primary, fontSize: 12, fontWeight: '700' },
+  logoImage: { height: 42, width: 42 },
+  brandTitle: { color: colors.text, fontSize: 16, fontWeight: '800' },
   actions: { alignItems: 'center', flexDirection: 'row', gap: 8 },
   iconButton: { alignItems: 'center', height: 42, justifyContent: 'center', width: 42 },
   avatar: {
