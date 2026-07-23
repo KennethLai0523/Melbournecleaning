@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../auth/AuthContext';
 import { colors } from '../theme';
 
@@ -18,6 +19,7 @@ function LogoMark() {
 export function AppHeader() {
   const router = useRouter();
   const { profile, openAuth } = useAuth();
+  const insets = useSafeAreaInsets();
 
   const openProfile = () => {
     if (!profile) {
@@ -28,7 +30,7 @@ export function AppHeader() {
   };
 
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, { height: 64 + insets.top, paddingTop: insets.top }]}>
       <TouchableOpacity style={styles.brand} onPress={() => router.push('/')}>
         <LogoMark />
         <View>

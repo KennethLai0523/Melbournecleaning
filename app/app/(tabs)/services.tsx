@@ -15,12 +15,12 @@ const services = [
     description: 'Comprehensive cleaning to help prepare your property for final inspection.',
   },
   {
-    title: 'Airbnb Cleaning',
-    description: 'Turnover cleaning for short-stay and Airbnb properties.',
+    title: 'Airbnb and Short-Stay Cleaning',
+    description: 'Turnover cleaning for Airbnb and short-stay properties.',
   },
   {
-    title: 'Move-In / Move-Out Cleaning',
-    description: 'Fresh-start cleaning for moving in or moving out of a home.',
+    title: 'Move-In and Move-Out Cleaning',
+    description: 'Cleaning services for moving in or moving out of a property.',
   },
 ];
 
@@ -29,7 +29,7 @@ export default function ServicesScreen() {
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Services</Text>
       <Text style={styles.subtitle}>
-        A native mobile overview of the current Melbourne Cleaning Group services.
+        Residential cleaning services available across Melbourne.
       </Text>
       {services.map((service) => (
         <View key={service.title} style={styles.card}>

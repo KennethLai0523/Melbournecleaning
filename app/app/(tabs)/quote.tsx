@@ -8,7 +8,6 @@ import {
   defaultQuoteState,
   formatCurrency,
   frequencyOptions,
-  propertyTypes,
   type QuoteState,
 } from '../../src/data/quote';
 import { buildQuoteMessage } from '../../src/utils/buildQuoteMessage';
@@ -16,37 +15,11 @@ import { colors } from '../../src/theme';
 import { useAuth } from '../../src/auth/AuthContext';
 import { CleaningItemIcon } from '../../src/components/CleaningItemIcon';
 
-function Counter({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  onChange: (next: number) => void;
-}) {
-  return (
-    <View style={styles.counterCard}>
-      <Text style={styles.counterLabel}>{label}</Text>
-      <View style={styles.counterRow}>
-        <TouchableOpacity style={styles.counterButton} onPress={() => onChange(Math.max(0, value - 1))}>
-          <Text style={styles.counterButtonText}>-</Text>
-        </TouchableOpacity>
-        <Text style={styles.counterValue}>{value}</Text>
-        <TouchableOpacity style={styles.counterButton} onPress={() => onChange(value + 1)}>
-          <Text style={styles.counterButtonText}>+</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
-
 export default function QuoteScreen() {
   const [state, setState] = useState<QuoteState>(defaultQuoteState);
   const [showAll, setShowAll] = useState(false);
   const { profile } = useAuth();
   const total = useMemo(() => calculateQuoteTotal(state.items), [state.items]);
-  const hasSavedProperty = profile?.role === 'customer' && Boolean(profile.property);
   const visibleItems = useMemo(
     () => cleaningItems.filter((item) => showAll || item.defaultVisible || (state.items[item.id] ?? 0) > 0),
     [showAll, state.items],
@@ -80,48 +53,11 @@ export default function QuoteScreen() {
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Quote</Text>
       <Text style={styles.subtitle}>
-        Property details are informational only. Total is based only on the cleaning items you select.
+        Choose your cleaning frequency and the services you need.
       </Text>
 
-      {hasSavedProperty ? (
-        <View style={styles.savedCard}>
-          <Text style={styles.sectionTitle}>Saved property</Text>
-          <Text style={styles.savedAddress}>{profile?.property?.address}</Text>
-          <Text style={styles.summaryLine}>
-            {state.propertyType} · {state.bedrooms} bed · {state.bathrooms} bath · {state.toilets} toilet
-          </Text>
-          <Text style={styles.savedHint}>Loaded from your customer profile.</Text>
-        </View>
-      ) : (
-      <>
       <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Property type</Text>
-        <View style={styles.chipWrap}>
-          {propertyTypes.map((type) => {
-            const active = state.propertyType === type.value;
-            return (
-              <TouchableOpacity
-                key={type.value}
-                style={[styles.chip, active && styles.chipActive]}
-                onPress={() => setState((prev) => ({ ...prev, propertyType: type.value }))}
-              >
-                <Text style={[styles.chipText, active && styles.chipTextActive]}>{type.label}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Property details</Text>
-        <View style={styles.counterGrid}>
-          <Counter label="Bedrooms" value={state.bedrooms} onChange={(value) => setState((prev) => ({ ...prev, bedrooms: value }))} />
-          <Counter label="Bathrooms" value={state.bathrooms} onChange={(value) => setState((prev) => ({ ...prev, bathrooms: value }))} />
-          <Counter label="Toilets" value={state.toilets} onChange={(value) => setState((prev) => ({ ...prev, toilets: value }))} />
-          <Counter label="Living rooms" value={state.livingRooms} onChange={(value) => setState((prev) => ({ ...prev, livingRooms: value }))} />
-          <Counter label="Kitchens" value={state.kitchens} onChange={(value) => setState((prev) => ({ ...prev, kitchens: value }))} />
-        </View>
-        <Text style={[styles.sectionTitle, { marginTop: 16 }]}>Frequency</Text>
+        <Text style={styles.sectionTitle}>Frequency</Text>
         <View style={styles.chipWrap}>
           {frequencyOptions.map((option) => {
             const active = state.frequency === option.value;
@@ -137,8 +73,6 @@ export default function QuoteScreen() {
           })}
         </View>
       </View>
-      </>
-      )}
 
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>Cleaning details</Text>
@@ -185,7 +119,6 @@ export default function QuoteScreen() {
 
       <View style={styles.summaryCard}>
         <Text style={styles.sectionTitle}>Summary</Text>
-        <Text style={styles.summaryLine}>Property type: {state.propertyType}</Text>
         <Text style={styles.summaryLine}>Frequency: {state.frequency}</Text>
         <Text style={styles.totalLabel}>Estimated total</Text>
         <Text style={styles.totalValue}>{formatCurrency(total)}</Text>
@@ -217,15 +150,6 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 18,
   },
-  savedCard: {
-    backgroundColor: '#fff6f8',
-    borderColor: '#f3c5cf',
-    borderRadius: 18,
-    borderWidth: 1,
-    padding: 18,
-  },
-  savedAddress: { color: colors.text, fontSize: 16, fontWeight: '700', marginBottom: 5 },
-  savedHint: { color: colors.primary, fontSize: 12, fontWeight: '700', marginTop: 7 },
   sectionTitle: { color: colors.text, fontSize: 18, fontWeight: '800', marginBottom: 12 },
   chipWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   chip: {
@@ -239,16 +163,6 @@ const styles = StyleSheet.create({
   chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   chipText: { color: colors.text, fontWeight: '600' },
   chipTextActive: { color: '#fff' },
-  counterGrid: { gap: 12 },
-  counterCard: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 14,
-    padding: 12,
-    backgroundColor: colors.surfaceMuted,
-  },
-  counterLabel: { color: colors.textMuted, fontSize: 13, marginBottom: 10 },
-  counterRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   counterInline: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   counterButton: {
     width: 34,

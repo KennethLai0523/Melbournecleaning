@@ -131,7 +131,7 @@ export function AuthModal() {
           {mode === 'register' && role === 'customer' && (
             <View style={styles.propertyCard}>
               <Text style={styles.sectionTitle}>Property details</Text>
-              <Text style={styles.helper}>Saved to your profile and prefilled in every quote.</Text>
+              <Text style={styles.propertyHint}>Saved to your profile and prefilled in every quote.</Text>
               <TextInput style={styles.input} placeholder="Property address" value={property.address} onChangeText={(address) => setProperty((current) => ({ ...current, address }))} />
               <View style={styles.chips}>
                 {(['apartment', 'unit', 'townhouse', 'house', 'studio'] as const).map((type) => (
@@ -169,6 +169,7 @@ const styles = StyleSheet.create({
   segmentTextActive: { color: '#fff' },
   sectionTitle: { color: colors.text, fontSize: 17, fontWeight: '800' },
   helper: { color: colors.textMuted, fontSize: 13, lineHeight: 19 },
+  propertyHint: { color: '#3f4247', fontSize: 14, fontWeight: '600', lineHeight: 20 },
   input: { backgroundColor: '#fff', borderColor: colors.border, borderRadius: 12, borderWidth: 1, color: colors.text, fontSize: 16, paddingHorizontal: 14, paddingVertical: 13 },
   propertyCard: { backgroundColor: colors.surfaceMuted, borderRadius: 16, gap: 12, padding: 16 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
