@@ -19,7 +19,7 @@ function LogoMark() {
 
 export function AppHeader() {
   const router = useRouter();
-  const { profile, openAuth } = useAuth();
+  const { profile, openAuth, logout } = useAuth();
   const insets = useSafeAreaInsets();
 
   const openProfile = () => {
@@ -27,7 +27,11 @@ export function AppHeader() {
       openAuth();
       return;
     }
-    router.push('/account');
+    Alert.alert(profile.name, 'Manage your account', [
+      { text: 'View profile', onPress: () => router.push('/account') },
+      { text: 'Log out', style: 'destructive', onPress: () => void logout() },
+      { text: 'Cancel', style: 'cancel' },
+    ]);
   };
 
   return (

@@ -1,4 +1,5 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { CONTACT_DETAILS } from '../../src/config/contact';
 import { colors } from '../../src/theme';
@@ -11,6 +12,13 @@ const trustPoints = [
   { icon: 'booking', title: '$0 booking fee', description: 'Cleaning services available from as low as $80.' },
   { icon: 'calendar', title: 'Flexible scheduling', description: 'One-time, weekly, fortnightly and monthly cleaning options.' },
   { icon: 'coverage', title: 'Melbourne-wide service coverage', description: 'Serving Melbourne CBD, inner city and surrounding suburbs.' },
+];
+
+const quoteSteps = [
+  { title: 'Choose property type', subtitle: 'Tell us what kind of home needs cleaning.' },
+  { title: 'Build your summary', subtitle: 'Select the cleaning details you need.' },
+  { title: 'Pick a date', subtitle: 'Choose your preferred day and start time.' },
+  { title: 'Contact us', subtitle: 'Send your quote to our Melbourne team.' },
 ];
 
 function BenefitIcon({ name }: { name: string }) {
@@ -35,10 +43,32 @@ function BenefitIcon({ name }: { name: string }) {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const [heroTop, setHeroTop] = useState(0);
+  const [timelineOffset, setTimelineOffset] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(700);
+  const timelineTop = heroTop + timelineOffset;
+  const timelineProgress = scrollY.interpolate({
+    inputRange: [
+      Math.max(0, timelineTop - viewportHeight * 0.7),
+      Math.max(1, timelineTop + quoteSteps.length * 104 - viewportHeight * 0.45),
+    ],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
-      <View style={styles.heroCard}>
+    <Animated.ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.content}
+      onLayout={(event) => setViewportHeight(event.nativeEvent.layout.height)}
+      onScroll={Animated.event(
+        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+        { useNativeDriver: true },
+      )}
+      scrollEventThrottle={16}
+    >
+      <View style={styles.heroCard} onLayout={(event) => setHeroTop(event.nativeEvent.layout.y)}>
         <Text style={styles.title}>Professional cleaning for Melbourne homes</Text>
         <Text style={styles.copy}>Serving Melbourne and surrounding suburbs.</Text>
 
@@ -71,6 +101,59 @@ export default function HomeScreen() {
             <Text style={styles.secondaryButtonText}>Build Your Quote</Text>
           </TouchableOpacity>
         </View>
+
+        <View
+          style={styles.quoteTimeline}
+          onLayout={(event) => setTimelineOffset(event.nativeEvent.layout.y)}
+        >
+          <Text style={styles.timelineTitle}>How your quote works</Text>
+          <View style={styles.timelineTrack} pointerEvents="none">
+            <Animated.View
+              style={[
+                styles.timelineProgress,
+                { transform: [{ scaleY: timelineProgress }] },
+              ]}
+            />
+          </View>
+          {quoteSteps.map((step, index) => (
+            <Animated.View
+              key={step.title}
+              style={[
+                styles.timelineStep,
+                {
+                  opacity: scrollY.interpolate({
+                    inputRange: [
+                      Math.max(0, timelineTop + index * 104 - viewportHeight * 0.8),
+                      Math.max(1, timelineTop + index * 104 - viewportHeight * 0.58),
+                    ],
+                    outputRange: [0.35, 1],
+                    extrapolate: 'clamp',
+                  }),
+                  transform: [{
+                    translateY: scrollY.interpolate({
+                      inputRange: [
+                        Math.max(0, timelineTop + index * 104 - viewportHeight * 0.8),
+                        Math.max(1, timelineTop + index * 104 - viewportHeight * 0.58),
+                      ],
+                      outputRange: [18, 0],
+                      extrapolate: 'clamp',
+                    }),
+                  }],
+                },
+              ]}
+            >
+              <View style={styles.timelineMarkerColumn}>
+                <View style={styles.timelineMarker}>
+                  <Text style={styles.timelineNumber}>{index + 1}</Text>
+                </View>
+              </View>
+              <View style={styles.timelineCopy}>
+                <Text style={styles.timelineStepTitle}>{step.title}</Text>
+                <Text style={styles.timelineSubtitle}>{step.subtitle}</Text>
+              </View>
+            </Animated.View>
+          ))}
+        </View>
       </View>
 
       <View style={styles.card}>
@@ -102,7 +185,7 @@ export default function HomeScreen() {
         <Text style={styles.rowValue}>{CONTACT_DETAILS.hours.saturday}</Text>
         <Text style={styles.rowValue}>{CONTACT_DETAILS.hours.sunday}</Text>
       </View>
-    </ScrollView>
+    </Animated.ScrollView>
   );
 }
 
@@ -130,6 +213,41 @@ const styles = StyleSheet.create({
   secondaryButton: { backgroundColor: colors.primary },
   primaryButtonText: { color: '#fff', fontWeight: '700', fontSize: 16 },
   secondaryButtonText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  quoteTimeline: {
+    borderTopColor: colors.border,
+    borderTopWidth: 1,
+    marginTop: 20,
+    paddingTop: 18,
+  },
+  timelineTitle: { color: colors.text, fontSize: 17, fontWeight: '800', marginBottom: 14 },
+  timelineTrack: {
+    backgroundColor: colors.border,
+    bottom: 52,
+    left: 13,
+    position: 'absolute',
+    top: 62,
+    width: 2,
+  },
+  timelineProgress: {
+    backgroundColor: colors.primary,
+    height: '100%',
+    transformOrigin: 'top',
+    width: 2,
+  },
+  timelineStep: { flexDirection: 'row', minHeight: 104 },
+  timelineMarkerColumn: { alignItems: 'center', marginRight: 12, width: 28 },
+  timelineMarker: {
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    borderRadius: 14,
+    height: 28,
+    justifyContent: 'center',
+    width: 28,
+  },
+  timelineNumber: { color: '#fff', fontSize: 13, fontWeight: '800' },
+  timelineCopy: { flex: 1, paddingBottom: 38 },
+  timelineStepTitle: { color: colors.text, fontSize: 15, fontWeight: '800', lineHeight: 20 },
+  timelineSubtitle: { color: colors.textMuted, fontSize: 13, lineHeight: 18, marginTop: 2 },
   card: {
     backgroundColor: colors.surface,
     borderRadius: 18,

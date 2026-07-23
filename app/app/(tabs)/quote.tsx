@@ -1,5 +1,6 @@
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useEffect, useMemo, useState } from 'react';
+import { useLocalSearchParams } from 'expo-router';
 import { openExternal } from '../../src/utils/links';
 import { CONTACT_DETAILS } from '../../src/config/contact';
 import {
@@ -17,9 +18,10 @@ import { CleaningItemIcon } from '../../src/components/CleaningItemIcon';
 import { SchedulePicker } from '../../src/components/SchedulePicker';
 
 export default function QuoteScreen() {
+  const { draft: editDraft, jobId } = useLocalSearchParams<{ draft?: string; jobId?: string }>();
   const [state, setState] = useState<QuoteState>(defaultQuoteState);
   const [showAll, setShowAll] = useState(false);
-  const { profile, openAuth, saveDraft, submitJob } = useAuth();
+  const { profile, openAuth, saveDraft, submitJob, updateJob, draft, jobs } = useAuth();
   const total = useMemo(() => calculateQuoteTotal(state.items), [state.items]);
   const visibleItems = useMemo(
     () => cleaningItems.filter((item) => showAll || item.defaultVisible || (state.items[item.id] ?? 0) > 0),
@@ -39,6 +41,21 @@ export default function QuoteScreen() {
       kitchens: saved.kitchens,
     }));
   }, [profile]);
+
+  useEffect(() => {
+    if (editDraft === 'true' && draft) {
+      setState(draft.quote);
+      setShowAll(true);
+      return;
+    }
+    if (jobId) {
+      const job = jobs.find((record) => record.id === jobId);
+      if (job?.status === 'pending') {
+        setState(job.quote);
+        setShowAll(true);
+      }
+    }
+  }, [draft, editDraft, jobId, jobs]);
 
   const updateItems = (id: string, value: number) => {
     setState((prev) => ({
@@ -78,8 +95,13 @@ export default function QuoteScreen() {
       Alert.alert('Choose a schedule', 'Select your preferred date and time before sending a job.');
       return;
     }
-    await submitJob(state, total);
-    Alert.alert('Job sent', 'Your job is pending and can be cancelled from your profile until accepted.');
+    if (jobId) {
+      await updateJob(jobId, state, total);
+      Alert.alert('Job updated', 'Your pending job details have been updated.');
+    } else {
+      await submitJob(state, total);
+      Alert.alert('Job sent', 'Your job is pending and can be cancelled from your profile until accepted.');
+    }
   };
 
   return (
@@ -169,7 +191,7 @@ export default function QuoteScreen() {
           <Text style={styles.draftButtonText}>Save Draft Quote</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.jobButton]} onPress={() => void handleSendJob()}>
-          <Text style={styles.primaryButtonText}>Send Job</Text>
+          <Text style={styles.primaryButtonText}>{jobId ? 'Update Job' : 'Send Job'}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.primaryButton, total <= 0 && styles.buttonDisabled]}

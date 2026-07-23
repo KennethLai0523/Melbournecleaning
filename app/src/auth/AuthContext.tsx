@@ -16,6 +16,7 @@ export interface PropertyProfile {
 
 export interface AccountProfile {
   id: string;
+  joinedAt: string;
   role: AccountRole;
   name: string;
   email: string;
@@ -42,13 +43,15 @@ interface AuthContextValue {
   jobs: CleaningJob[];
   openAuth: () => void;
   closeAuth: () => void;
-  register: (profile: Omit<AccountProfile, 'id'>) => Promise<void>;
+  register: (profile: Omit<AccountProfile, 'id' | 'joinedAt'>) => Promise<void>;
   login: (email: string) => Promise<boolean>;
   logout: () => Promise<void>;
   deleteAccount: () => Promise<void>;
   saveDraft: (quote: QuoteState, total: number) => Promise<void>;
   submitJob: (quote: QuoteState, total: number) => Promise<void>;
   cancelJob: (jobId: string) => Promise<void>;
+  updatePropertyAddress: (address: string) => Promise<void>;
+  updateJob: (jobId: string, quote: QuoteState, total: number) => Promise<void>;
 }
 
 const ACCOUNT_KEY = '@melbourne-cleaning/account';
@@ -96,7 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       openAuth: () => setAuthVisible(true),
       closeAuth: () => setAuthVisible(false),
       register: async (details) => {
-        const account: AccountProfile = { ...details, id: `${Date.now()}` };
+        const account: AccountProfile = { ...details, id: `${Date.now()}`, joinedAt: new Date().toISOString() };
         await AsyncStorage.multiSet([
           [ACCOUNT_KEY, JSON.stringify(account)],
           [SESSION_KEY, 'active'],
@@ -159,6 +162,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       cancelJob: async (jobId) => {
         const nextJobs = jobs.map((job) =>
           job.id === jobId && job.status === 'pending' ? { ...job, status: 'cancelled' as const } : job,
+        );
+        await AsyncStorage.setItem(JOBS_KEY, JSON.stringify(nextJobs));
+        setJobs(nextJobs);
+      },
+      updatePropertyAddress: async (address) => {
+        if (!profile?.property) return;
+        const nextProfile = { ...profile, property: { ...profile.property, address } };
+        await AsyncStorage.setItem(ACCOUNT_KEY, JSON.stringify(nextProfile));
+        setSavedAccount(nextProfile);
+        setProfile(nextProfile);
+      },
+      updateJob: async (jobId, quote, total) => {
+        const nextJobs = jobs.map((job) =>
+          job.id === jobId && job.status === 'pending'
+            ? { ...job, quote, total, updatedAt: new Date().toISOString() }
+            : job,
         );
         await AsyncStorage.setItem(JOBS_KEY, JSON.stringify(nextJobs));
         setJobs(nextJobs);
