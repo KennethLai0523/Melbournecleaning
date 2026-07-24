@@ -49,7 +49,6 @@ export default function JobMarketScreen() {
   const [uploadingSlot, setUploadingSlot] = useState<string | null>(null);
   const availableJobs = jobs.filter((job) => job.status === 'pending');
   const assignedJobs = jobs.filter((job) => job.status === 'accepted' && job.acceptedBy === profile?.id);
-  const completedJobs = jobs.filter((job) => job.status === 'completed' && job.acceptedBy === profile?.id);
 
   if (profile?.role !== 'cleaner') {
     return (
@@ -85,26 +84,22 @@ export default function JobMarketScreen() {
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>Browse jobs</Text>
-      <Text style={styles.subtitle}>Review available work, then manage accepted jobs and cleaning photos.</Text>
+      <Text style={styles.title}>Job assigned</Text>
+      <Text style={styles.subtitle}>Accept a customer job. Once accepted, its cleaning-photo checklist expands below the job details.</Text>
 
-      <Text style={styles.sectionTitle}>Available jobs</Text>
-      {!availableJobs.length ? (
+      {!availableJobs.length && !assignedJobs.length ? (
         <View style={styles.card}><Text style={styles.emptyTitle}>No jobs available</Text><Text style={styles.subtitle}>New customer jobs will appear here.</Text></View>
-      ) : availableJobs.map((job) => (
-        <View key={job.id} style={styles.card}>
-          <JobSummary job={job} />
-          <TouchableOpacity style={styles.acceptButton} onPress={() => void acceptJob(job.id)}>
-            <Text style={styles.acceptText}>Accept job</Text>
-          </TouchableOpacity>
-        </View>
-      ))}
-
-      <Text style={styles.sectionTitle}>Job assigned</Text>
-      <Text style={styles.subtitle}>Jobs assigned to you appear here until the cleaning is completed.</Text>
-      {!assignedJobs.length ? (
-        <View style={styles.card}><Text style={styles.subtitle}>No jobs are currently assigned to you.</Text></View>
-      ) : assignedJobs.map((job) => {
+      ) : (
+        <>
+          {availableJobs.map((job) => (
+            <View key={job.id} style={styles.card}>
+              <JobSummary job={job} />
+              <TouchableOpacity style={styles.acceptButton} onPress={() => void acceptJob(job.id)}>
+                <Text style={styles.acceptText}>Accept job</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+          {assignedJobs.map((job) => {
         const slots = getPhotoSlots(job);
         const completedSlots = slots.filter((slot) => job.cleaningPhotos?.[slot.id]).length;
         return (
@@ -133,18 +128,9 @@ export default function JobMarketScreen() {
             </TouchableOpacity>
           </View>
         );
-      })}
-
-      <Text style={styles.sectionTitle}>Job done</Text>
-      <Text style={styles.subtitle}>Your completed cleaning jobs are kept here.</Text>
-      {!completedJobs.length ? (
-        <View style={styles.card}><Text style={styles.subtitle}>No completed jobs yet.</Text></View>
-      ) : completedJobs.map((job) => (
-        <View key={job.id} style={styles.card}>
-          <JobSummary job={job} />
-          <Text style={styles.doneBadge}>Completed</Text>
-        </View>
-      ))}
+          })}
+        </>
+      )}
     </ScrollView>
   );
 }
@@ -154,7 +140,6 @@ const styles = StyleSheet.create({
   content: { gap: 14, padding: 20, paddingBottom: 48 },
   center: { alignItems: 'center', backgroundColor: colors.background, flex: 1, gap: 14, justifyContent: 'center', padding: 24 },
   title: { color: colors.text, fontSize: 28, fontWeight: '800' },
-  sectionTitle: { color: colors.text, fontSize: 21, fontWeight: '800', marginTop: 10 },
   subtitle: { color: colors.textMuted, fontSize: 14, lineHeight: 21 },
   card: { backgroundColor: colors.surface, borderColor: colors.border, borderRadius: 18, borderWidth: 1, gap: 7, padding: 18 },
   emptyTitle: { color: colors.text, fontSize: 18, fontWeight: '800' },
@@ -176,6 +161,5 @@ const styles = StyleSheet.create({
   photo: { borderRadius: 8, height: 76, width: '100%' },
   cameraIcon: { color: colors.primary, fontSize: 30, fontWeight: '500' },
   photoLabel: { color: colors.text, fontSize: 12, fontWeight: '700', marginTop: 5, textAlign: 'center' },
-  doneBadge: { alignSelf: 'flex-start', backgroundColor: '#dff7e9', borderRadius: 999, color: '#18794e', fontSize: 12, fontWeight: '800', marginTop: 7, overflow: 'hidden', paddingHorizontal: 10, paddingVertical: 6 },
   disabled: { opacity: 0.45 },
 });

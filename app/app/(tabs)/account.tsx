@@ -176,7 +176,7 @@ export default function AccountScreen() {
           <View style={styles.card}>
             <View style={styles.recordHeading}>
               <Text style={styles.cardTitle}>Job done</Text>
-              <TouchableOpacity onPress={() => router.push('/job-market')}><Text style={styles.editLink}>View completed</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push('/completed-jobs')}><Text style={styles.editLink}>View completed</Text></TouchableOpacity>
             </View>
             <Text style={styles.helper}>Cleaning jobs you have completed are saved here.</Text>
             <Text style={styles.value}>{jobs.filter((job) => job.status === 'completed' && job.acceptedBy === profile.id).length} completed</Text>
